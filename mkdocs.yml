@@ -1,0 +1,120 @@
+site_name: My Network Knowledge Base
+site_url: https://chermet90.github.io/my-kb-mkdocs/  # подправьте на свой
+repo_url: https://github.com/chermet90/my-kb-mkdocs
+edit_uri: edit/main/docs/
+
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  language: ru
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: deep orange
+      toggle:
+        icon: material/brightness-4
+        name: Переключить тёмную тему
+    - scheme: slate
+      primary: deep orange
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Переключить светлую тему
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.action.edit
+
+markdown_extensions:
+  - admonition
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.tasklist
+  - toc:
+      permalink: true
+  - pymdownx.emoji
+
+nav:
+  - Home: index.md
+  - Networks:
+      - Routing Protocols AD: Networks/routing_protocols_AD.md
+      - L2:
+          - VLANs: Networks/VLANs/common.md
+          - VTP: Networks/VLANs/vtp.md
+          - STP: Networks/STP/common.md
+          - 'STP → MST': Networks/STP/mstp.md
+          - LACP: Networks/LACP/config_guide.md
+      - L2.5 → MPLS:
+          - Overview: Networks/MPLS/common.md
+          - L3VPN: Networks/MPLS/l3vpn.md
+          - Example: Networks/MPLS/prod_example.md
+      - L3:
+          - Subnetting: Networks/subneting.md
+          - NAT: Networks/NAT/common.md
+          - 'VRRP → Fortinet': Networks/VRRP/fortinet_example.md
+          - IPv6:
+              - Basic: Networks/IPv6/basic.md
+              - PPPoE Dual-Stack: Networks/IPv6/pppoe_dual-stack.md
+          - OSPF:
+              - LSA and Area types: Networks/OSPF/LSA_and_areas.md
+              - Troubleshooting: Networks/OSPF/troubleshoot.md
+          - BGP:
+              - Main Features: Networks/BGP/main_features.md
+              - Path Selection: Networks/BGP/bgp_path_selection.md
+              - Examples: Networks/BGP/bgp_examples.md
+              - Troubleshooting: Networks/BGP/troubleshooting.md
+          - VPN:
+              - GRE: Networks/VPN/gre.md
+              - FVRF: Networks/VPN/fvrf.md
+              - DMVPN: Networks/VPN/dmvpn.md
+              - IPsec: Networks/VPN/ipsec.md
+              - ISAKMP Example: Networks/VPN/isakmp_example.md
+      - L4 → TCP: Networks/L4/tcp.md
+  - Vendors:
+      - Cisco: Networks/Vendors/cisco.md
+      - 'Cisco → NX-OS → Multicast': Networks/Vendors/cisco/NX-OS/multicast.md
+      - 'Cisco → IOS XE → Netflow': Networks/Vendors/cisco/IOS-XE/netflow.md
+      - pfSense: Networks/Vendors/pfSense.md
+      - vCenter: vCenter.md
+      - Fortinet: Networks/Vendors/fortigate.md
+      - Huawei:
+          - Firmware: Networks/Vendors/huawei/firmware.md
+          - RADIUS: Networks/Vendors/huawei/radius.md
+          - SNMP: Networks/Vendors/huawei/snmp.md
+  - Windows:
+      - File Server: Windows/file_server.md
+      - RDP: Windows/rdp.md
+      - Network settings: Windows/tcp_settings.md
+      - Drivers: Windows/drivers.md
+      - Hyper-V: Windows/hyper-v.md
+  - Linux:
+      - Begin: Linux/begin.md
+      - How to: Linux/how_to.md
+      - SSH: Linux/ssh.md
+      - fail2ban: Linux/fail2ban.md
+      - Strongswan: Linux/strongswan.md
+      - Nmap: Linux/nmap.md
+      - Swap: Linux/swap.md
+      - Docker: Linux/docker.md
+  - Coding:
+      - Python → Создание окружения: Coding/Python/create_environment.md
+      - Git:
+          - Миграция репозиториев: Coding/Git/migration.md
+          - Управление remotes: Coding/Git/remotes.md
+          - Настройка credentials: Coding/Git/credentials.md
+          - Переписывание авторства: Coding/Git/rewrite-author.md
+          - Переключение веток: Coding/Git/branch-switching.md
+      - Ansible → From Zero to Hero: Coding/Ansible/from_zero_to_hero.md
+  - Мониторинг:
+      - PRTG: Мониторинг/prtg.md
+      - 'Docker TLS': Мониторинг/Создание TLS сертификатов для подключения к Docker.md
+      - Netflow: Мониторинг/netflow.md
