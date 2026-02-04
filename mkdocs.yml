@@ -84,6 +84,7 @@ nav:
       - 'Cisco → NX-OS → Multicast': Networks/Vendors/cisco/NX-OS/multicast.md
       - 'Cisco → IOS XE → Netflow': Networks/Vendors/cisco/IOS-XE/netflow.md
       - 'Cisco → IOS XE → OSPF': Networks/Vendors/cisco/IOS-XE/ospf.md
+      - 'Cisco → IOS XE → IPsec': Networks/Vendors/cisco/IOS-XE/ipsec.md
       - Fortinet: Networks/Vendors/fortigate.md
       - Huawei:
           - Firmware: Networks/Vendors/huawei/firmware.md
