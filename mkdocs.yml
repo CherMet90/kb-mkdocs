@@ -1,4 +1,4 @@
-site_name: Network and System administration KB
+site_name: Network and System Administration
 site_url: https://chermet90.github.io/kb-mkdocs/
 repo_url: https://github.com/chermet90/kb-mkdocs
 edit_uri: edit/main/docs/
@@ -96,7 +96,6 @@ nav:
       - Mikrotik:
           - RouterOS: Networks/Vendors/mikrotik/ros.md
       - pfSense: Networks/Vendors/pfSense.md
-      - vCenter: vCenter.md
   - Windows:
       - File Server: Windows/file_server.md
       - RDP: Windows/rdp.md
@@ -125,3 +124,6 @@ nav:
       - PRTG: Мониторинг/prtg.md
       - 'Docker TLS': Мониторинг/Создание TLS сертификатов для подключения к Docker.md
       - Netflow: Мониторинг/netflow.md
+  - Виртуализация:
+      - vCenter: Virtualization/vCenter.md
+      - KVM в WSL2: Virtualization/kvm_wsl.md
