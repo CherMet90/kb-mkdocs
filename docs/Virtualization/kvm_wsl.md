@@ -119,7 +119,7 @@ qemu-system-x86_64 \
   -enable-kvm \
   -cpu host \
   -m 2048 \
-  -drive file=~/vm-images/pfsense.qcow2,if=virtio,format=qcow2 \
+  -drive file=~/vm/images/pfsense.qcow2,if=virtio,format=qcow2 \
   -netdev user,id=wan -device virtio-net-pci,netdev=wan \
   -netdev user,id=lan -device virtio-net-pci,netdev=lan \
   -nographic \
@@ -156,7 +156,7 @@ qemu-system-x86_64 \
   -enable-kvm \
   -cpu host \
   -m 1024 \
-  -drive file=~/vm-images/pfsense.qcow2,if=virtio,format=qcow2 \
+  -drive file=~/vm/images/pfsense.qcow2,if=virtio,format=qcow2 \
   -drive file=pfSense-CE-memstick-serial-*.img,if=ide,format=raw,media=cdrom \
   -boot d \
   -netdev user,id=wan -device virtio-net-pci,netdev=wan \
@@ -175,7 +175,7 @@ qemu-system-x86_64 \
   -enable-kvm \
   -cpu host \
   -m 1024 \
-  -drive file=~/vm-images/pfsense.qcow2,if=virtio,format=qcow2 \
+  -drive file=~/vm/images/pfsense.qcow2,if=virtio,format=qcow2 \
   -drive file=pfSense-CE-memstick-serial-*.img,if=none,id=stick,format=raw \
   -device qemu-xhci,id=usb \
   -device usb-storage,drive=stick,bus=usb.0 \
@@ -216,7 +216,7 @@ Libvirt хранит образы по умолчанию в `/var/lib/libvirt/i
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='/home/user/vm-images/example.qcow2'/>
+      <source file='/home/YOUR_USERNAME/vm/images/example.qcow2'/>
       <target dev='vda' bus='virtio'/>
     </disk>
     <interface type='network'>
