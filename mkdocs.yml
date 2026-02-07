@@ -83,13 +83,17 @@ nav:
       - Cisco: Networks/Vendors/cisco.md
       - 'Cisco → NX-OS → Multicast': Networks/Vendors/cisco/NX-OS/multicast.md
       - 'Cisco → IOS XE → Netflow': Networks/Vendors/cisco/IOS-XE/netflow.md
-      - pfSense: Networks/Vendors/pfSense.md
-      - vCenter: vCenter.md
+      - 'Cisco → IOS XE → OSPF': Networks/Vendors/cisco/IOS-XE/ospf.md
+      - 'Cisco → IOS XE → IPsec': Networks/Vendors/cisco/IOS-XE/ipsec.md
       - Fortinet: Networks/Vendors/fortigate.md
       - Huawei:
           - Firmware: Networks/Vendors/huawei/firmware.md
           - RADIUS: Networks/Vendors/huawei/radius.md
           - SNMP: Networks/Vendors/huawei/snmp.md
+      - Mikrotik:
+          - RouterOS: Networks/Vendors/mikrotik/ros.md
+      - pfSense: Networks/Vendors/pfSense.md
+      - vCenter: vCenter.md
   - Windows:
       - File Server: Windows/file_server.md
       - RDP: Windows/rdp.md
