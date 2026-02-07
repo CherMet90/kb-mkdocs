@@ -1,3 +1,8 @@
+---
+title: Mikrotik RouterOS
+date: 2026-01-16
+---
+
 ##### IPsec (GRE over IPsec)
 В обычной ситуации достаточно создать интерфейс типа GRE Tunnel - всё необходимое будет создаваться автоматически  
 Если же это не подходит, например мы хотим включить режим response-only (passive), то при создании интерфейса GRE Tunnel не задаём пароль ipsec и предварительно создаём вручную динамические сущности для тунеля:  
@@ -15,6 +20,8 @@ add peer=new-peer auth-method=pre-shared-key secret="ВАШ_PSK"
 add src-address=Y.Y.Y.Y/32 dst-address=X.X.X.X/32 protocol=gre \
     action=encrypt tunnel=no peer=new-peer proposal=default
 ```
+
+<!-- more -->
 
 ##### BGP
 1. Создаём префикс-листы

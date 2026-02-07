@@ -1,3 +1,8 @@
+---
+title: IPsec VPN на Cisco IOS-XE (IKEv2)
+date: 2026-02-04
+---
+
 # IPsec VPN на Cisco IOS-XE (IKEv2)
 
 ## Общая архитектура компонентов
@@ -19,6 +24,8 @@ graph TD
     class B policy
     class K keyring
 ```
+
+<!-- more -->
 
 ### Data Plane — IPsec
 

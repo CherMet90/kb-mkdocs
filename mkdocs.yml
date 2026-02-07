@@ -46,9 +46,18 @@ markdown_extensions:
       permalink: true
   - pymdownx.emoji
 
+extra:
+  base_path: /kb-mkdocs/
+
+plugins:
+  - search
+  - macros:
+      render_by_default: false
+
 nav:
-  - Home: index.md
+  - Последние обновления: latest.md
   - Networks:
+      - Packet Flow: index.md
       - Routing Protocols AD: Networks/routing_protocols_AD.md
       - L2:
           - VLANs: Networks/VLANs/common.md
