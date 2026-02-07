@@ -1,53 +1,59 @@
-```
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                            CONTROL PLANE (IKEv2)                            │
-│                                                                             │
-│  ┌─────────────────┐         ┌─────────────────┐         ┌───────────────┐  │
-│  │  ikev2 policy   │────────▶│ ikev2 proposal  │         │ ikev2 keyring │  │
-│  │                 │ (1:N)   │                 │         │               │  │
-│  │ • match criteria│         │ • encryption    │         │ • peer IP     │  │
-│  │ • proposal order│         │ • prf           │         │ • PSK         │  │
-│  └─────────────────┘         │ • dh group      │         └───────┬───────┘  │
-│          │                   └─────────────────┘                 │          │
-│          │ ГЛОБАЛЬНО                                             │ (1:1)    │
-│          │ (без явных ссылок)                                    ▼          │
-│          │                                           ┌─────────────────┐    │
-│          │                                           │  ikev2 profile  │    │
-│          │                                           │                 │    │
-│          │                                           │ • match local   │    │
-│          │                                           │ • match remote  │    │
-│          │                                           │ • identity      │    │
-│          │                                           │ • lifetime      │    │
-│          │                                           │ • dpd           │    │
-│          │                                           └────────┬────────┘    │
-│          │                                                    │             │
-└──────────┼────────────────────────────────────────────────────┼─────────────┘
-           │                                                    │
-           │ автоматически                          явно или автоматически
-           │ применяется                                        │
-           ▼                                                    ▼
-┌─────────────────────────────────────────────────────────────────────────────┐
-│                            DATA PLANE (IPsec)                               │
-│                                                                             │
-│  ┌───────────────────┐       ┌─────────────────────┐       ┌─────────────┐  │
-│  │ ipsec transform   │◀──────│    ipsec profile    │◀──────│   Tunnel    │  │
-│  │                   │ (1:N) │                     │ (1:1) │             │  │
-│  │ • esp encryption  │       │ • transform-set     │       │ • source    │  │
-│  │ • esp integrity   │       │ • pfs group         │       │ • dest      │  │
-│  │ • mode            │       │ • SA lifetime       │       │ • mode      │  │
-│  └───────────────────┘       │ • [set ikev2-profile] ◀─────│ • защита    │  │
-│                              └─────────────────────┘       └─────────────┘  │
-│                                                                             │
-└─────────────────────────────────────────────────────────────────────────────┘
+# IPsec VPN на Cisco IOS-XE (IKEv2)
+
+## Общая архитектура компонентов
+
+### Control Plane — IKEv2
+
+```mermaid
+graph TD
+    A[ikev2 proposal<br>• encryption<br>• integrity/PRF<br>• DH group] -->|множество в политике| B[ikev2 policy<br>• match fvrf / local-address<br>• список proposal + порядок]
+
+    K[ikev2 keyring<br>• peer address / hostname<br>• pre-shared-key] --> D[ikev2 profile<br>• match identity / address<br>• authentication pre-share / rsa-sig<br>• identity local<br>• keyring reference<br>• lifetime / DPD]
+
+    B -->|"глобальный scope<br>выбирается автоматически"| D
+
+    classDef proposal fill:#e6f3ff,stroke:#0066cc
+    classDef policy fill:#fff3e6,stroke:#cc6600
+    classDef keyring fill:#e6ffe6,stroke:#006600
+    class A proposal
+    class B policy
+    class K keyring
 ```
 
-##### Последовательность настройки
-- ikev2 proposal*
-- ikev2 policy*. В политике определяются proposal и их порядок (порядок не всегда соблюдается пиром, пир может выбирать самый слабый вариант - это нужно учитывать), которые будут предложены пиру. Политики имеют глобальный scope, т.е. их может использовать любой тунель подпадающий под критерии. Критериями политики могут выступать local address (внешний) и fvrf. Более специфичная политика обычно имеет приоритет над общей. Таким образом можно создать политику (fvrf any без match local address) со списком желаемых proposal, а в случае если они не подходят - создать более специфичную политику с другим списком proposal
-- ikev2 keyring. создаём пару remote address:PSK
-- ikev2 profile. Указываем match критерии (address local и identity remote address), как представляемся пиру identity local address, способ аутентификации, ссылка на keyring, IKE lifetime, dpd
-- ipsec transform-set*. ipsec encryption и mode (tunnel/transport)
-- ipsec profile. ссылка на подходящие transform-set, pfs группа, SA lifetime, ссылка на ikev2 профиль (обязательно, если мы initiator)
-- создаём тунель
+### Data Plane — IPsec
 
-NOTE: *можно переиспользовать для разных тунелей
+```mermaid
+graph LR
+    TS[ipsec transform-set<br>• esp-aes / esp-gcm<br>• esp-sha256-hmac / null<br>• mode tunnel / transport] -->|ссылка| PR[ipsec profile<br>• set transform-set<br>• set pfs groupX<br>• set security-association lifetime<br>• set ikev2-profile <name>]
+
+    TUN[Virtual-Template / Tunnel<br>• ip address / unnumbered<br>• tunnel source<br>• tunnel destination / mode dynamic<br>• tunnel protection ipsec profile <name>] --> PR
+
+    classDef ts fill:#fff0f5,stroke:#c71585
+    classDef profile fill:#f0fff0,stroke:#228b22
+    class TS ts
+    class PR profile
+```
+
+## Последовательность настройки (рекомендуемый порядок)
+
+1. **ikev2 proposal** — определяем крипто-алгоритмы (можно переиспользовать)
+2. **ikev2 policy** — задаём match-условия и упорядоченный список proposal  
+   > Важно: более специфичная политика (например, с `match local-address`) имеет приоритет
+3. **ikev2 keyring** — пары peer → PSK (или сертификаты)
+4. **ikev2 profile** — основной блок сопоставления, аутентификации, DPD, lifetime  
+   > Обязательно указать `match identity remote` и `authentication`
+5. **ipsec transform-set** — алгоритмы шифрования и целостности для фазы 2
+6. **ipsec profile** — связывает transform-set, PFS, lifetime и **обязательно** ikev2-profile
+7. **интерфейс Tunnel** — `tunnel protection ipsec profile <имя>`
+
+> **Примечание**: transform-set, proposal и policy можно (и нужно) переиспользовать между несколькими туннелями.
+
+## Полезные команды отладки
+
+```bash
+show crypto ikev2 sa
+show crypto ipsec sa
+show crypto ikev2 profile
+show crypto ikev2 policy
+debug crypto ikev2
+```
