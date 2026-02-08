@@ -1,0 +1,4036 @@
+
+<!doctype html>
+<html lang="ru" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://chermet90.github.io/kb-mkdocs/Coding/Ansible/from_zero_to_hero/">
+      
+      
+        <link rel="prev" href="../../Git/branch-switching/">
+      
+      
+        <link rel="next" href="../../../%D0%9C%D0%BE%D0%BD%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%BD%D0%B3/prtg/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.1">
+    
+    
+      
+        <title>Ansible → From Zero to Hero - Network and System Administration</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#ansible-from-zero-to-hero" class="md-skip">
+          Перейти к содержанию
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Верхний колонтитул">
+    <a href="../../.." title="Network and System Administration" class="md-header__button md-logo" aria-label="Network and System Administration" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Network and System Administration
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Ansible → From Zero to Hero
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="indigo" data-md-color-accent="deep-orange"  aria-label="Переключить тёмную тему"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Переключить тёмную тему" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="deep-orange" data-md-color-accent="indigo"  aria-label="Переключить светлую тему"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Переключить светлую тему" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Поиск" placeholder="Поиск" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Поиск">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Очистить" aria-label="Очистить" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Инициализация поиска
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/chermet90/kb-mkdocs" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Вкладки" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../latest/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Последние обновления
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../.." class="md-tabs__link">
+          
+  
+  
+    
+  
+  Networks
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Networks/Vendors/cisco/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Vendors
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Windows/file_server/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Windows
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Linux/begin/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Linux
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../../Python/create_environment/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Coding
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../%D0%9C%D0%BE%D0%BD%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%BD%D0%B3/prtg/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Мониторинг
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../Virtualization/vCenter/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Виртуализация
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+  
+
+<nav class="md-nav md-nav--primary md-nav--lifted md-nav--integrated" aria-label="Навигация" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Network and System Administration" class="md-nav__button md-logo" aria-label="Network and System Administration" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Network and System Administration
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/chermet90/kb-mkdocs" title="Перейти к репозиторию" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../latest/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Последние обновления
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../.." class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Networks
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_2" id="__nav_2_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Networks
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/routing_protocols_AD/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Routing Protocols AD
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    L2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    L2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/VLANs/common/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VLANs
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/VLANs/vtp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VTP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/STP/common/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/STP/mstp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    STP → MST
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/LACP/config_guide/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LACP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_4" id="__nav_2_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    L2.5 → MPLS
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    L2.5 → MPLS
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/MPLS/common/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Overview
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/MPLS/l3vpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    L3VPN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/MPLS/prod_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Example
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5" id="__nav_2_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    L3
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    L3
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/subneting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Subnetting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/NAT/common/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    NAT
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/VRRP/fortinet_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VRRP → Fortinet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_5_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_4" id="__nav_2_5_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IPv6
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    IPv6
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/IPv6/basic/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Basic
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/IPv6/pppoe_dual-stack/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PPPoE Dual-Stack
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_5_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_5" id="__nav_2_5_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OSPF
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    OSPF
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/OSPF/LSA_and_areas/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LSA and Area types
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/OSPF/troubleshoot/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_5_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_6" id="__nav_2_5_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    BGP
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    BGP
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/BGP/main_features/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Main Features
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/BGP/bgp_path_selection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Path Selection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/BGP/bgp_examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Examples
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/BGP/troubleshooting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Troubleshooting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_5_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_5_7" id="__nav_2_5_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    VPN
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_5_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_5_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    VPN
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/VPN/gre/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    GRE
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/VPN/fvrf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    FVRF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/VPN/dmvpn/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DMVPN
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/VPN/ipsec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IPsec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/VPN/isakmp_example/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    ISAKMP Example
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/L4/tcp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    L4 → TCP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vendors
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Vendors
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/Vendors/cisco/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/Vendors/cisco/NX-OS/multicast/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco → NX-OS → Multicast
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/Vendors/cisco/IOS-XE/netflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco → IOS XE → Netflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/Vendors/cisco/IOS-XE/ospf/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco → IOS XE → OSPF
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/Vendors/cisco/IOS-XE/ipsec/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cisco → IOS XE → IPsec
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/Vendors/fortigate/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Fortinet
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_7" id="__nav_3_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Huawei
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Huawei
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/Vendors/huawei/firmware/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Firmware
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/Vendors/huawei/radius/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RADIUS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/Vendors/huawei/snmp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SNMP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_8" id="__nav_3_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Mikrotik
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Mikrotik
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/Vendors/mikrotik/ros/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RouterOS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Networks/Vendors/pfSense/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    pfSense
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Windows
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Windows
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Windows/file_server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    File Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Windows/rdp/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    RDP
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Windows/tcp_settings/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network settings
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Windows/drivers/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Drivers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Windows/hyper-v/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hyper-V
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Linux
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Linux
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Linux/begin/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Begin
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Linux/how_to/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How to
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Linux/ssh/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    SSH
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Linux/fail2ban/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    fail2ban
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Linux/strongswan/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Strongswan
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Linux/nmap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Nmap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Linux/swap/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Swap
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Linux/docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Coding
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Coding
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Python/create_environment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Python → Создание окружения
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+          
+          
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_6_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_6_2" id="__nav_6_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Git
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_6_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Git
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Git/migration/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Миграция репозиториев
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Git/remotes/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Управление remotes
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Git/credentials/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Настройка credentials
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Git/rewrite-author/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Переписывание авторства
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Git/branch-switching/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Переключение веток
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ansible → From Zero to Hero
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Ansible → From Zero to Hero
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Содержание">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Содержание
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#1-playbook-zero-level" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Шаг 1: Простейший Playbook для Одного Устройства (Zero Level)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#2-basic-scaling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Шаг 2: Добавляем Несколько Устройств и Группы (Basic Scaling)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#3-safe-changes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Шаг 3: Изменение Конфигурации с Идемпотентностью (Safe Changes)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Шаг 4: Мультивендорность с Условной Логикой
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Шаг 4: Мультивендорность с Условной Логикой">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Подраздел: Работа с Фактами и Неподдерживаемыми Устройствами
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#5-jinja2-" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Шаг 5: Jinja2-Шаблоны для Генерации Конфигураций
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Шаг 6: Роли для Модульности, Переиспользования и Мультивендорности
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#7-inventory-netbox-nb_inventory-sot-integration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Шаг 7: Динамический Inventory с NetBox и Плагином nb_inventory (SoT Integration)
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_7" >
+        
+          
+          <label class="md-nav__link" for="__nav_7" id="__nav_7_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Мониторинг
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_7_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_7">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Мониторинг
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../%D0%9C%D0%BE%D0%BD%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%BD%D0%B3/prtg/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PRTG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../%D0%9C%D0%BE%D0%BD%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%BD%D0%B3/%D0%A1%D0%BE%D0%B7%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%20TLS%20%D1%81%D0%B5%D1%80%D1%82%D0%B8%D1%84%D0%B8%D0%BA%D0%B0%D1%82%D0%BE%D0%B2%20%D0%B4%D0%BB%D1%8F%20%D0%BF%D0%BE%D0%B4%D0%BA%D0%BB%D1%8E%D1%87%D0%B5%D0%BD%D0%B8%D1%8F%20%D0%BA%20Docker/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Docker TLS
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../%D0%9C%D0%BE%D0%BD%D0%B8%D1%82%D0%BE%D1%80%D0%B8%D0%BD%D0%B3/netflow/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Netflow
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_8" >
+        
+          
+          <label class="md-nav__link" for="__nav_8" id="__nav_8_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Виртуализация
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_8_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_8">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Виртуализация
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Virtualization/vCenter/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    vCenter
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Virtualization/kvm_wsl/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    KVM в WSL2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+    <a href="https://github.com/chermet90/kb-mkdocs/edit/main/docs/Coding/Ansible/from_zero_to_hero.md" title="Редактировать страницу" class="md-content__button md-icon" rel="edit">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="ansible-from-zero-to-hero">Ansible для Сетевого Оборудования: From Zero to Hero<a class="headerlink" href="#ansible-from-zero-to-hero" title="Permanent link">&para;</a></h1>
+<p><strong>Предварительные требования:</strong>
+- Установите Ansible: <code>pip install ansible</code> или через пакетный менеджер (e.g., <code>apt install ansible</code> на Ubuntu).
+- Для сетевых модулей: <code>ansible-galaxy collection install ansible.netcommon</code> (универсальные инструменты для CLI).
+- Для вендор-специфичных: <code>ansible-galaxy collection install cisco.ios</code> (для Cisco IOS), <code>junipernetworks.junos</code> и т.д.
+- Тестируйте на эмуляторах (e.g., GNS3, Containerlab) или реальных устройствах с SSH-доступом.
+- ansible.cfg: Создайте файл с <code>host_key_checking = False</code> для упрощения подключений и <code>forks=50</code> для параллелизма на сотнях устройств.</p>
+<h2 id="1-playbook-zero-level">Шаг 1: Простейший Playbook для Одного Устройства (Zero Level)<a class="headerlink" href="#1-playbook-zero-level" title="Permanent link">&para;</a></h2>
+<p>Начнем с базового: выполним простую команду (e.g., <code>show version</code>) на одном сетевом устройстве. Это вводит ключевые элементы Ansible: <strong>playbook</strong> (YAML-файл с инструкциями), <strong>inventory</strong> (список хостов) и <strong>модули</strong> (готовые функции для задач).</p>
+<p><strong>Создайте inventory (inventory.ini):</strong>
+<div class="highlight"><pre><span></span><code><span class="k">[switches]</span>
+<span class="na">switch1 ansible_host</span><span class="o">=</span><span class="s">192.168.1.10 ansible_user=admin ansible_password=secret ansible_network_os=ios ansible_connection=network_cli</span>
+</code></pre></div>
+- <code>ansible_host</code>: IP-адрес устройства.
+- <code>ansible_user/password</code>: Учетные данные (в production используйте ansible-vault для секретов).
+- <code>ansible_network_os</code>: Указывает ОС (e.g., <code>ios</code> для Cisco; обязательно задавать вручную, так как не определяется автоматически gather_facts).
+- <code>ansible_connection=network_cli</code>: Подключение по SSH с CLI (вместо <code>local</code> для серверов).</p>
+<p><strong>Создайте playbook (simple_show.yml):</strong>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Show version on switch</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">switch1</span><span class="w">  </span><span class="c1"># Цель: хост из inventory</span>
+<span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># Не собираем системные факты (не нужны для сетевого оборудования)</span>
+
+<span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run show version</span>
+<span class="w">      </span><span class="nt">ansible.netcommon.cli_command</span><span class="p">:</span><span class="w">  </span><span class="c1"># Универсальный модуль для CLI-команд</span>
+<span class="w">        </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">show version</span>
+<span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">output</span><span class="w">  </span><span class="c1"># Сохраняем вывод в переменную &#39;output&#39;</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Display output</span>
+<span class="w">      </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span><span class="w">  </span><span class="c1"># Модуль для отладки (выводит переменные)</span>
+<span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">output.stdout</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w">  </span><span class="c1"># Выводим содержимое (Jinja2-синтаксис для переменных)</span>
+</code></pre></div>
+- <strong>Синтаксис playbook</strong>: Начинается с <code>---</code>, затем plays (группы задач). <code>hosts</code> — цели, <code>tasks</code> — список задач.
+- <strong>Модуль <code>cli_command</code></strong>: Выполняет команду и возвращает вывод. Не меняет конфигурацию (только "show").
+- <strong>register</strong>: Сохраняет результат в переменную для дальнейшего использования.
+- <strong>debug</strong>: Выводит информацию (полезно для тестирования).</p>
+<p><strong>Запуск:</strong> <code>ansible-playbook -i inventory.ini simple_show.yml</code>
+- Это выполнит <code>show version</code> на switch1 и покажет вывод. Если устройство недоступно, playbook упадет с ошибкой.</p>
+<p><strong>Что мы достигли:</strong> Простое чтение данных с устройства. Нет изменений — безопасно для production.</p>
+<h2 id="2-basic-scaling">Шаг 2: Добавляем Несколько Устройств и Группы (Basic Scaling)<a class="headerlink" href="#2-basic-scaling" title="Permanent link">&para;</a></h2>
+<p>Теперь масштабируем на несколько устройств. Введем <strong>группы в inventory</strong> для логической организации (e.g., по вендорам или площадкам) и <strong>loops</strong> для повторяющихся задач.</p>
+<p><strong>Обновите inventory.ini:</strong>
+<div class="highlight"><pre><span></span><code><span class="k">[switches]</span>
+<span class="na">switch1 ansible_host</span><span class="o">=</span><span class="s">192.168.1.10 ansible_user=admin ansible_password=secret ansible_network_os=ios ansible_connection=network_cli</span>
+<span class="na">switch2 ansible_host</span><span class="o">=</span><span class="s">192.168.1.11 ansible_user=admin ansible_password=secret ansible_network_os=junos ansible_connection=network_cli</span>
+
+<span class="k">[cisco_switches]</span>
+<span class="na">switch1</span>
+
+<span class="k">[juniper_switches]</span>
+<span class="na">switch2</span>
+
+<span class="na">[all_switches</span><span class="o">:</span><span class="s">children]</span><span class="w">  </span><span class="c1"># Группа, включающая подгруппы</span>
+<span class="na">cisco_switches</span>
+<span class="na">juniper_switches</span>
+</code></pre></div>
+- Группы позволяют запускать playbook на подмножествах устройств (e.g., <code>hosts: cisco_switches</code>). Для нескольких площадок добавьте группы вроде <code>[site_a]</code> и используйте NetBox для динамики (см. Шаг 7).</p>
+<p><strong>Обновленный playbook (multi_show.yml):</strong>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Show version on multiple switches</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all_switches</span>
+<span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run show commands</span>
+<span class="w">      </span><span class="nt">ansible.netcommon.cli_command</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w">  </span><span class="c1"># Loop по списку команд</span>
+<span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">outputs</span>
+<span class="w">      </span><span class="nt">loop</span><span class="p">:</span><span class="w">  </span><span class="c1"># Цикл: выполняет задачу для каждого элемента</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">show version</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">show interfaces brief</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Display outputs</span>
+<span class="w">      </span><span class="nt">ansible.builtin.debug</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">msg</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Command</span><span class="nv"> </span><span class="s">&#39;{{</span><span class="nv"> </span><span class="s">item.item</span><span class="nv"> </span><span class="s">}}&#39;</span><span class="nv"> </span><span class="s">output:</span><span class="nv"> </span><span class="s">{{</span><span class="nv"> </span><span class="s">item.stdout</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">      </span><span class="nt">loop</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">outputs.results</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w">  </span><span class="c1"># Loop по результатам</span>
+</code></pre></div>
+- <strong>loop</strong>: Повторяет задачу для списка (здесь — команды). Полезно для повторяющихся действий на сотнях устройств.
+- <strong>register с loop</strong>: Сохраняет массив результатов (<code>outputs.results</code>).</p>
+<p><strong>Запуск:</strong> <code>ansible-playbook -i inventory.ini multi_show.yml --limit switch1</code> (опция <code>--limit</code> для конкретного хоста).
+- Это выполнит команды на всех switches, но масштабируемо: Ansible параллелизирует (по умолчанию 5 форков; настройте в ansible.cfg для сотен устройств).</p>
+<p><strong>Что мы достигли:</strong> Базовое масштабирование. Для production: Добавьте <code>serial: 10%</code> в play для постепенного rollout (e.g., 10% устройств за раз, чтобы избежать сбоев в сети).</p>
+<h2 id="3-safe-changes">Шаг 3: Изменение Конфигурации с Идемпотентностью (Safe Changes)<a class="headerlink" href="#3-safe-changes" title="Permanent link">&para;</a></h2>
+<p>Теперь перейдем к изменениям (e.g., создание VLAN). Введем <strong>идемпотентность</strong> (playbook не меняет то, что уже настроено) с помощью <code>register</code>, <code>when</code> (условные конструкции) и модуля <code>cli_config</code>.</p>
+<p><strong>Playbook (vlan_create.yml):</strong>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create VLAN if not exists</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">switches</span>
+<span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+
+<span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Check if VLAN 100 exists</span>
+<span class="w">      </span><span class="nt">ansible.netcommon.cli_command</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">show vlan id 100</span>
+<span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vlan_check</span>
+<span class="w">      </span><span class="nt">ignore_errors</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span><span class="w">  </span><span class="c1"># Игнорируем ошибку, если VLAN не найден</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create VLAN 100</span>
+<span class="w">      </span><span class="nt">ansible.netcommon.cli_config</span><span class="p">:</span><span class="w">  </span><span class="c1"># Модуль для конфигурационных команд</span>
+<span class="w">        </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">vlan 100</span>
+<span class="w">          </span><span class="no">name &quot;Guest&quot;</span>
+<span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vlan_check.failed or &quot;not found&quot; in vlan_check.stdout</span><span class="w">  </span><span class="c1"># Условие: только если не существует</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Verify VLAN</span>
+<span class="w">      </span><span class="nt">ansible.netcommon.cli_command</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">show vlan id 100</span>
+<span class="w">      </span><span class="nt">failed_when</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;&#39;VLAN</span><span class="nv"> </span><span class="s">100&#39;</span><span class="nv"> </span><span class="s">not</span><span class="nv"> </span><span class="s">in</span><span class="nv"> </span><span class="s">result.stdout&quot;</span><span class="w">  </span><span class="c1"># Провал, если не создан</span>
+<span class="w">      </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">result</span>
+</code></pre></div>
+- <strong>cli_config</strong>: Выполняет команды в режиме конфигурации (e.g., <code>conf t</code>).
+- <strong>when</strong>: Условное выполнение (Jinja2-выражение). Делает задачу идемпотентной.
+- <strong>failed_when</strong>: Кастомная проверка на ошибку.
+- <strong>ignore_errors</strong>: Продолжает playbook даже при ошибке (полезно для проверок).</p>
+<p><strong>Запуск с dry-run:</strong> <code>ansible-playbook vlan_create.yml --check</code> (симулирует без изменений).
+- Для production: Добавьте <code>check_mode: yes</code> в задачи для безопасного тестирования.</p>
+<p><strong>Что мы достигли:</strong> Безопасные изменения. Это работает с CLI любых вендоров (адаптируйте команды в <code>command</code>/<code>config</code>).</p>
+<h2 id="4">Шаг 4: Мультивендорность с Условной Логикой<a class="headerlink" href="#4" title="Permanent link">&para;</a></h2>
+<p>Для мультивендорности используем факт <code>ansible_network_os</code> (задается вручную в inventory) и <code>when</code> для выбора задач. Это позволяет один playbook для разных вендоров (e.g., Cisco SG без модулей vs. IOS с модулями). <strong>Важно:</strong> <code>ansible_network_os</code> не определяется автоматически; всегда указывайте его в inventory.</p>
+<p><strong>Playbook (multi_vendor_vlan.yml):</strong>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Multi-vendor VLAN creation</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all_switches</span>
+<span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># Избегаем ошибок для неподдерживаемых ОС (см. ниже)</span>
+
+<span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create VLAN (Cisco IOS module)</span>
+<span class="w">      </span><span class="nt">cisco.ios.ios_vlans</span><span class="p">:</span><span class="w">  </span><span class="c1"># Вендор-специфичный модуль (идемпотентный!)</span>
+<span class="w">        </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Guest</span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merged</span>
+<span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ansible_network_os == &#39;cisco.ios.ios&#39;</span><span class="w">  </span><span class="c1"># Условие по ОС</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create VLAN (Juniper module)</span>
+<span class="w">      </span><span class="nt">junipernetworks.junos.junos_vlans</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">config</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Guest</span>
+<span class="w">        </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merged</span>
+<span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ansible_network_os == &#39;junipernetworks.junos.junos&#39;</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create VLAN (Generic CLI for others)</span>
+<span class="w">      </span><span class="nt">ansible.netcommon.cli_config</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;vlan</span><span class="nv"> </span><span class="s">100</span><span class="nv"> </span><span class="s">name</span><span class="nv"> </span><span class="s">Guest&quot;</span><span class="w">  </span><span class="c1"># Адаптируйте для вендора</span>
+<span class="w">      </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ansible_network_os not in [&#39;cisco.ios.ios&#39;, &#39;junipernetworks.junos.junos&#39;]</span>
+</code></pre></div>
+- <strong>gather_facts: false</strong>: Рекомендуется по умолчанию для мультивендорности, чтобы избежать ошибок на неподдерживаемых устройствах.
+- <strong>Вендор-специфичные модули</strong>: Декларативны и идемпотентны (предпочтительны, если доступны). См. <a href="https://docs.ansible.com/ansible/latest/network/index.html">Ansible Network Modules</a>.
+- <strong>when для мультивендорности</strong>: Выбирает логику на основе фактов.</p>
+<p><strong>Что мы достигли:</strong> Один playbook для смешанной среды. Для неизвестных вендоров (e.g., Zyxel) fallback на <code>cli_config</code> с ручной идемпотентностью (как в Шаге 3).</p>
+<h3 id="_1">Подраздел: Работа с Фактами и Неподдерживаемыми Устройствами<a class="headerlink" href="#_1" title="Permanent link">&para;</a></h3>
+<p><code>gather_facts</code> в Ansible для сетевого оборудования работает только для поддерживаемых ОС (e.g., Cisco IOS с <code>ios_facts</code>, Juniper Junos с <code>junos_facts</code>). Он собирает детали вроде модели, версии, интерфейсов. Для неподдерживаемых (e.g., Zyxel, D-Link) gather_facts не применим и может вызвать ошибки.</p>
+<ul>
+<li><strong>Поведение с <code>gather_facts: true</code> на неподдерживаемом хосте</strong>: Playbook попытается собрать факты, но без подходящего модуля (e.g., <code>_facts</code>) упадет с ошибкой (e.g., "No facts module for this platform"). Это нарушит выполнение для всего play.</li>
+<li><strong>Рекомендации</strong>:</li>
+<li>Задавайте <code>ansible_network_os</code> вручную в inventory для всех устройств.</li>
+<li>Устанавливайте <code>gather_facts: false</code> по умолчанию в мультивендорных playbook'ах.</li>
+<li>Для ручного сбора фактов используйте <code>cli_command</code>:
+    <div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Manual facts gathering</span>
+<span class="w">  </span><span class="nt">ansible.netcommon.cli_command</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">show version</span>
+<span class="w">  </span><span class="nt">register</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">version_output</span>
+<span class="w">  </span><span class="nt">when</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ansible_network_os not in [&#39;cisco.ios.ios&#39;, &#39;junipernetworks.junos.junos&#39;]</span><span class="w">  </span><span class="c1"># Только для неподдерживаемых</span>
+</code></pre></div></li>
+<li>Если нужны факты для поддерживаемых: Включите gather_facts selectively (e.g., в отдельном play или with <code>when</code>).</li>
+<li><strong>Масштаб и площадки</strong>: В больших средах (сотни устройств) используйте динамический inventory из NetBox, чтобы автоматически задавать <code>ansible_network_os</code> на основе тегов/моделей.</li>
+</ul>
+<p>См. <a href="https://docs.ansible.com/ansible/latest/network/user_guide/network_best_practices_2.5.html">Ansible Network Best Practices</a> для деталей.</p>
+<h2 id="5-jinja2-">Шаг 5: Jinja2-Шаблоны для Генерации Конфигураций<a class="headerlink" href="#5-jinja2-" title="Permanent link">&para;</a></h2>
+<p>Для сложных/повторяющихся конфигов используем <strong>Jinja2-шаблоны</strong> (<code>.j2</code> файлы с переменными/циклами). Это отделяет данные от логики, идеально для шаблонизации (e.g., базовая настройка для сотен устройств).</p>
+<p><strong>Создайте шаблон (templates/base_config.j2):</strong>
+<div class="highlight"><pre><span></span><code><span class="x">hostname </span><span class="cp">{{</span> <span class="nv">hostname</span> <span class="cp">}}</span>
+<span class="x">vlan </span><span class="cp">{{</span> <span class="nv">vlan_id</span> <span class="cp">}}</span>
+<span class="x">  name &quot;</span><span class="cp">{{</span> <span class="nv">vlan_name</span> <span class="cp">}}</span><span class="x">&quot;</span>
+<span class="cp">{%</span> <span class="k">for</span> <span class="nv">intf</span> <span class="k">in</span> <span class="nv">interfaces</span> <span class="cp">%}</span>
+<span class="x">interface </span><span class="cp">{{</span> <span class="nv">intf.name</span> <span class="cp">}}</span>
+<span class="x">  switchport mode access</span>
+<span class="x">  switchport access vlan </span><span class="cp">{{</span> <span class="nv">vlan_id</span> <span class="cp">}}</span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+</code></pre></div>
+- Jinja2: <code>{{ var }}</code> для переменных, <code>{% for %}</code> для циклов.</p>
+<p><strong>Playbook (template_vlan.yml):</strong>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Apply templated config</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">switches</span>
+<span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span><span class="w">  </span><span class="c1"># Переменные (могут быть в group_vars или extra-vars)</span>
+<span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">inventory_hostname</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w">  </span><span class="c1"># Встроенная переменная</span>
+<span class="w">    </span><span class="nt">vlan_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">    </span><span class="nt">vlan_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Guest</span>
+<span class="w">    </span><span class="nt">interfaces</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">GigabitEthernet1/0/1</span><span class="p p-Indicator">},</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="nv">GigabitEthernet1/0/2</span><span class="p p-Indicator">}]</span>
+
+<span class="w">  </span><span class="nt">tasks</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate config from template</span>
+<span class="w">      </span><span class="nt">ansible.builtin.template</span><span class="p">:</span><span class="w">  </span><span class="c1"># Модуль для рендеринга Jinja2</span>
+<span class="w">        </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">templates/base_config.j2</span>
+<span class="w">        </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/{{</span><span class="nv"> </span><span class="s">inventory_hostname</span><span class="nv"> </span><span class="s">}}_config.txt&quot;</span>
+<span class="w">      </span><span class="nt">delegate_to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span><span class="w">  </span><span class="c1"># Выполнить локально на контроллере</span>
+
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Apply generated config</span>
+<span class="w">      </span><span class="nt">ansible.netcommon.cli_config</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/{{</span><span class="nv"> </span><span class="s">inventory_hostname</span><span class="nv"> </span><span class="s">}}_config.txt&quot;</span>
+</code></pre></div>
+- <strong>vars</strong>: Определяют переменные (локальные, групповые или глобальные).
+- <strong>template</strong>: Генерирует файл на основе шаблона.
+- <strong>delegate_to</strong>: Запускает задачу не на хосте, а локально (полезно для генерации).</p>
+<p><strong>Что мы достигли:</strong> Масштабируемые, кастомизированные конфиги. Для production: Храните шаблоны в Git, передавайте vars из NetBox. Адаптируйте шаблоны под вендоров с <code>when</code>.</p>
+<h2 id="6">Шаг 6: Роли для Модульности, Переиспользования и Мультивендорности<a class="headerlink" href="#6" title="Permanent link">&para;</a></h2>
+<p>Роли — это переиспользуемые блоки кода в Ansible, которые инкапсулируют задачи, переменные, шаблоны и логику. Они идеальны для сетевой автоматизации, где задачи повторяются (e.g., создание VLAN, обновление ACL) на сотнях устройств. <strong>Применимость ролей</strong>:
+- <strong>Модульность</strong>: Разделяют сложные playbook'и на независимые компоненты (e.g., роль для VLAN, роль для интерфейсов).
+- <strong>Переиспользование</strong>: Одна роль может использоваться в множестве playbook'ов (e.g., для initial setup или one-time задач).
+- <strong>Мультивендорность</strong>: Внутри роли используйте условную логику (<code>when</code>, <code>include_tasks</code>) для выбора vendor-specific задач, делая роль универсальной.
+- <strong>Масштаб</strong>: В больших средах (сотни устройств, несколько площадок) роли упрощают поддержку — обновите роль один раз, и все playbook'и выиграют.
+- <strong>Структура роли</strong>: Директория с поддиректориями (tasks/, vars/, templates/, etc.). Ansible автоматически загружает <code>tasks/main.yml</code> при вызове роли.</p>
+<p><strong>Пример структуры роли (roles/vlan_manager/):</strong>
+<div class="highlight"><pre><span></span><code>roles/vlan_manager/
+├── tasks/
+│   ├── main.yml                  # Главный файл: маршрутизация логики
+│   ├── cisco_ios.yml             # Задачи для Cisco IOS
+│   ├── juniper_junos.yml         # Задачи для Juniper Junos
+│   └── generic_cli.yml           # Fallback для других вендоров
+├── templates/
+│   └── generic_vlan.j2           # Jinja2-шаблон для CLI
+└── vars/
+    └── main.yml                  # Переменные по умолчанию (e.g., vlan_list)
+</code></pre></div></p>
+<p><strong>vars/main.yml (пример переменных):</strong>
+<div class="highlight"><pre><span></span><code><span class="nt">vlan_list</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">vlan_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Guest</span>
+</code></pre></div></p>
+<p><strong>tasks/main.yml (маршрутизация мультивендорной логики):</strong>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Include vendor-specific tasks</span>
+<span class="w">  </span><span class="nt">include_tasks</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">item</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">  </span><span class="nt">with_first_found</span><span class="p">:</span><span class="w">  </span><span class="c1"># Динамически выбирает первый подходящий файл</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">ansible_network_os</span><span class="nv"> </span><span class="s">}}.yml&quot;</span><span class="w">  </span><span class="c1"># e.g., cisco_ios.yml</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;generic_cli.yml&quot;</span><span class="w">               </span><span class="c1"># Fallback</span>
+</code></pre></div></p>
+<p><strong>tasks/cisco_ios.yml (vendor-specific):</strong>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create VLAN on Cisco IOS</span>
+<span class="w">  </span><span class="nt">cisco.ios.ios_vlans</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vlan_list</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merged</span>
+</code></pre></div></p>
+<p><strong>tasks/juniper_junos.yml:</strong>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Create VLAN on Juniper Junos</span>
+<span class="w">  </span><span class="nt">junipernetworks.junos.junos_vlans</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">config</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">vlan_list</span><span class="nv"> </span><span class="s">}}&quot;</span>
+<span class="w">    </span><span class="nt">state</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">merged</span>
+</code></pre></div></p>
+<p><strong>tasks/generic_cli.yml (fallback с шаблоном):</strong>
+<div class="highlight"><pre><span></span><code><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Generate config for generic device</span>
+<span class="w">  </span><span class="nt">ansible.builtin.template</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">generic_vlan.j2</span>
+<span class="w">    </span><span class="nt">dest</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/{{</span><span class="nv"> </span><span class="s">inventory_hostname</span><span class="nv"> </span><span class="s">}}_vlan.txt&quot;</span>
+<span class="w">  </span><span class="nt">delegate_to</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">localhost</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Apply config</span>
+<span class="w">  </span><span class="nt">ansible.netcommon.cli_config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">src</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;/tmp/{{</span><span class="nv"> </span><span class="s">inventory_hostname</span><span class="nv"> </span><span class="s">}}_vlan.txt&quot;</span>
+</code></pre></div></p>
+<p><strong>templates/generic_vlan.j2:</strong>
+<div class="highlight"><pre><span></span><code><span class="cp">{%</span> <span class="k">for</span> <span class="nv">vlan</span> <span class="k">in</span> <span class="nv">vlan_list</span> <span class="cp">%}</span>
+<span class="x">vlan </span><span class="cp">{{</span> <span class="nv">vlan.vlan_id</span> <span class="cp">}}</span>
+<span class="x">  name &quot;</span><span class="cp">{{</span> <span class="nv">vlan.name</span> <span class="cp">}}</span><span class="x">&quot;</span>
+<span class="cp">{%</span> <span class="k">endfor</span> <span class="cp">%}</span>
+</code></pre></div></p>
+<p><strong>Playbook (role_based.yml), вызывающий роль:</strong>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Manage VLANs with role</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">all_switches</span>
+<span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vlan_manager</span><span class="w">  </span><span class="c1"># Автоматически выполнит tasks/main.yml</span>
+<span class="w">  </span><span class="nt">vars_files</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vars/vlans.yml</span><span class="w">  </span><span class="c1"># Дополнительные vars (e.g., из NetBox)</span>
+</code></pre></div>
+- <strong>include_tasks с with_first_found</strong>: Ключевой прием для мультивендорности — Ansible пробует файлы по порядку и выбирает первый найденный.
+- <strong>Преимущества в production</strong>: Роли позволяют команде инженеров делить ответственность (e.g., один разрабатывает роль для Cisco, другой — для Zyxel). Для повторяющихся задач (e.g., добавление IP в ACL) создайте роль с параметрами (vars), передаваемыми через <code>--extra-vars</code>.</p>
+<p><pre class="mermaid"><code>flowchart TD
+    Start[Playbook запускает роль vlan_manager] --&gt; Load[Загрузка роли]
+
+    Load --&gt; LoadVars[Загрузка vars/main.yml]
+    Load --&gt; LoadTasks[Загрузка tasks/main.yml]
+
+    LoadVars --&gt; VarsMerge[Объединение переменных:&lt;br/&gt;- из роли&lt;br/&gt;- из playbook&lt;br/&gt;- из inventory]
+
+    VarsMerge --&gt; MainTask[tasks/main.yml выполняется]
+    LoadTasks --&gt; MainTask
+
+    MainTask --&gt; Detection{Определение вендора&lt;br/&gt;по ansible_network_os}
+
+    Detection --&gt;|cisco.ios.ios| CiscoFile[Поиск cisco_ios.yml]
+    Detection --&gt;|junipernetworks.junos| JuniperFile[Поиск juniper_junos.yml]
+    Detection --&gt;|Другой/Неизвестный| GenericFile[Поиск generic_cli.yml]
+
+    CiscoFile --&gt;|Найден| CiscoTasks[Выполнение cisco_ios.yml:&lt;br/&gt;cisco.ios.ios_vlans модуль]
+    JuniperFile --&gt;|Найден| JuniperTasks[Выполнение juniper_junos.yml:&lt;br/&gt;junos_vlans модуль]
+    GenericFile --&gt;|Всегда есть| GenericTasks[Выполнение generic_cli.yml]
+
+    GenericTasks --&gt; Template[Генерация конфига&lt;br/&gt;из templates/generic_vlan.j2]
+    Template --&gt; ApplyGeneric[Применение через&lt;br/&gt;cli_config]
+
+    CiscoTasks --&gt; Result[Результат выполнения]
+    JuniperTasks --&gt; Result
+    ApplyGeneric --&gt; Result
+
+    Result --&gt; End[Завершение роли]
+
+    style Start fill:#e1f5fe
+    style Detection fill:#fff9c4
+    style CiscoTasks fill:#c8e6c9
+    style JuniperTasks fill:#c8e6c9
+    style GenericTasks fill:#ffccbc
+    style Result fill:#f8bbd0</code></pre>
+<strong>Что мы достигли:</strong> Модульный, переиспользуемый код. Роли интегрируются с шаблонами и условной логикой, делая их основой для library в мультивендорной среде. См. <a href="https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_reuse_roles.html">Ansible Roles Docs</a>.</p>
+<h2 id="7-inventory-netbox-nb_inventory-sot-integration">Шаг 7: Динамический Inventory с NetBox и Плагином nb_inventory (SoT Integration)<a class="headerlink" href="#7-inventory-netbox-nb_inventory-sot-integration" title="Permanent link">&para;</a></h2>
+<p>Для сотен устройств по нескольким площадкам используйте <strong>динамический inventory</strong> из NetBox как Source of Truth (SoT). Мы фокусируемся на официальном плагине <code>nb_inventory</code> из коллекции <code>netbox.netbox</code> (для Ansible 2.10+). Это автоматически генерирует хосты на основе данных NetBox (devices, IPs, tags, sites), включая <code>ansible_network_os</code>, и группирует по площадкам/тегам.</p>
+<p><strong>Настройка плагина:</strong>
+- Установите коллекцию: <code>ansible-galaxy collection install netbox.netbox</code>.
+- Создайте файл inventory (inventory.yml):
+  <div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="nt">plugin</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netbox.netbox.nb_inventory</span><span class="w">  </span><span class="c1"># Плагин для динамического inventory</span>
+<span class="nt">api_endpoint</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://your-netbox-url</span><span class="w">  </span><span class="c1"># URL NetBox</span>
+<span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your-netbox-api-token</span><span class="w">  </span><span class="c1"># API-токен (храните в vault)</span>
+<span class="nt">validate_certs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span><span class="w">  </span><span class="c1"># Если self-signed сертификат</span>
+<span class="nt">compose</span><span class="p">:</span><span class="w">  </span><span class="c1"># Маппинг NetBox-данных на Ansible-vars</span>
+<span class="w">  </span><span class="nt">ansible_network_os</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform.slug</span><span class="w">  </span><span class="c1"># e.g., &#39;ios&#39; из NetBox platform</span>
+<span class="w">  </span><span class="nt">ansible_host</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">primary_ip.address</span>
+<span class="w">  </span><span class="nt">ansible_user</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom_fields.ansible_user</span><span class="w">  </span><span class="c1"># Если храните в custom fields</span>
+<span class="nt">query_filters</span><span class="p">:</span><span class="w">  </span><span class="c1"># Фильтры для устройств</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">status</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">active</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">managed</span><span class="w">  </span><span class="c1"># Только устройства с тегом &#39;managed&#39;</span>
+<span class="nt">group_by</span><span class="p">:</span><span class="w">  </span><span class="c1"># Автоматические группы</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sites</span><span class="w">  </span><span class="c1"># Группы по площадкам (e.g., site-a, site-b)</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">manufacturers</span><span class="w">  </span><span class="c1"># По вендорам (e.g., cisco, juniper)</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">device_types</span><span class="w">  </span><span class="c1"># По типам (e.g., switch, router)</span>
+</code></pre></div>
+- ansible.cfg: <code>inventory = inventory.yml</code> (или используйте <code>-i inventory.yml</code>).</p>
+<p><strong>Преимущества для вашей среды:</strong>
+- <strong>Масштаб</strong>: Автоматически тянет сотни устройств из NetBox, без ручного inventory.
+- <strong>Площадки</strong>: Группы по <code>sites</code> позволяют targeted playbook'и (e.g., <code>hosts: site-a</code> для одной площадки).
+- <strong>Мультивендорность</strong>: <code>compose</code> маппит NetBox-данные (e.g., platform) на <code>ansible_network_os</code>, интегрируясь с ролями из Шага 6.
+- <strong>Динамика</strong>: Изменения в NetBox (e.g., новый switch с тегом 'new') сразу отражаются в inventory.</p>
+<p><strong>Playbook (netbox_integration.yml), интегрирующий с ролью:</strong>
+<div class="highlight"><pre><span></span><code><span class="nn">---</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Provision VLANs from NetBox inventory</span>
+<span class="w">  </span><span class="nt">hosts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sites=site-a</span><span class="w">  </span><span class="c1"># Фильтр по площадке (группа из nb_inventory)</span>
+<span class="w">  </span><span class="nt">gather_facts</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">roles</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vlan_manager</span><span class="w">  </span><span class="c1"># Роль из Шага 6, использующая ansible_network_os из NetBox</span>
+<span class="w">  </span><span class="nt">vars</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">vlan_list</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;{{</span><span class="nv"> </span><span class="s">netbox_custom_vlans</span><span class="nv"> </span><span class="s">}}&quot;</span><span class="w">  </span><span class="c1"># Vars из NetBox custom fields</span>
+</code></pre></div>
+- <strong>Запуск:</strong> <code>ansible-playbook netbox_integration.yml</code> — плагин запросит NetBox API и сгенерирует хосты на лету.
+- <strong>Production-tips</strong>: Используйте <code>fetch_facts: true</code> в плагине для дополнительных NetBox-данных как vars. Интегрируйте с CI/CD для автоматизированного обновления.</p>
+<p><strong>Что мы достигли:</strong> Полная интеграция NetBox как SoT. Это обеспечивает актуальный inventory для больших мультивендорных сетей с несколькими площадками. См. <a href="https://docs.ansible.com/ansible/latest/collections/netbox/netbox/nb_inventory_inventory.html">nb_inventory Docs</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  К началу
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.sections", "navigation.expand", "navigation.indexes", "navigation.top", "toc.integrate", "search.suggest", "search.highlight", "content.code.copy", "content.action.edit"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "\u0421\u043a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u043d\u043e \u0432 \u0431\u0443\u0444\u0435\u0440", "clipboard.copy": "\u041a\u043e\u043f\u0438\u0440\u043e\u0432\u0430\u0442\u044c \u0432 \u0431\u0443\u0444\u0435\u0440", "search.result.more.one": "\u0415\u0449\u0451 1 \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.more.other": "\u0415\u0449\u0451 # \u043d\u0430 \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0435", "search.result.none": "\u0421\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u043e", "search.result.one": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e 1 \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0435", "search.result.other": "\u041d\u0430\u0439\u0434\u0435\u043d\u043e \u0441\u043e\u0432\u043f\u0430\u0434\u0435\u043d\u0438\u0439: #", "search.result.placeholder": "\u041d\u0430\u0447\u043d\u0438\u0442\u0435 \u043f\u0435\u0447\u0430\u0442\u0430\u0442\u044c \u0434\u043b\u044f \u043f\u043e\u0438\u0441\u043a\u0430", "search.result.term.missing": "\u041e\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442", "select.version": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0432\u0435\u0440\u0441\u0438\u044e"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
