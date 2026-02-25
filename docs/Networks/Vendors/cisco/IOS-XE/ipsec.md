@@ -1,6 +1,6 @@
 ---
 title: IPsec VPN на Cisco IOS-XE (IKEv2)
-date: 2026-02-04
+date: 2026-02-25
 ---
 
 # IPsec VPN на Cisco IOS-XE (IKEv2)
@@ -58,9 +58,57 @@ graph LR
 ## Полезные команды отладки
 
 ```bash
-show crypto ikev2 sa
-show crypto ipsec sa
-show crypto ikev2 profile
-show crypto ikev2 policy
+show crypto ikev2 policy            # список ikev2 политик на роутере
+show crypto ipsec transform-set     # какие существуют варианты TS на роутере
+show crypto ikev2 sa                # активные первые фазы
+show crypto ipsec sa peer <A.B.C.D> # SA первой фазы с первым пиром
+
+debug crypto condition reset
+debug crypto condition peer ipv4 <peer_ip>
+debug crypto ikev2 error
 debug crypto ikev2
+undebug all
+```
+
+## Пример
+
+```
+crypto ikev2 proposal NGE-COMPAT
+ encryption aes-cbc-256
+ integrity sha256
+ group 14
+crypto ikev2 proposal NGE-STRONG
+ encryption aes-gcm-256
+ prf sha256
+ group 19
+crypto ikev2 policy NGE-POLICY
+ match fvrf any
+ proposal NGE-STRONG
+ proposal NGE-COMPAT
+
+crypto ikev2 keyring <keyring-set_name>
+ peer <peer_name>
+  address <public_peer_ip>
+  pre-shared-key <password>
+
+crypto ikev2 profile <peer_name>
+ match fvrf any
+ match address local <local_ip>
+ match identity remote address <public_peer_ip> 255.255.255.255
+ authentication remote pre-share
+ authentication local pre-share
+ keyring local <keyring-set_name>
+ lifetime 86400
+ dpd 30 5 periodic
+
+crypto ipsec transform-set NGE-GCM esp-gcm 256
+ mode tunnel
+crypto ipsec transform-set NGE-CBC esp-aes 256 esp-sha256-hmac
+ mode tunnel
+
+crypto ipsec profile <peer_name>
+ set transform-set NGE-GCM NGE-CBC
+ set security-association lifetime seconds 1800
+ set pfs group19
+ set ikev2-profile <peer_name>
 ```
