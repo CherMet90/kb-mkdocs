@@ -54,7 +54,7 @@ sudo sysctl --system
 
 ### Служба для поднятия интерфейсов
 
-```ini /etc/systemd/system/ipsec-xfrm-interfaces.service
+```ini
 # /etc/systemd/system/ipsec-xfrm-interfaces.service
 # Предварительно проверяем название интерфейса инстанса, возможно его нужно будет зафиксировать через netplan
 
@@ -81,7 +81,7 @@ WantedBy=multi-user.target
 
 
 ### Создаём конфиг для strongswan
-```conf /etc/swanctl/swanctl.conf
+```conf
 # /etc/swanctl/swanctl.conf
 # Представлен вариант конфига с использованием общих для разных соединений настроек
 
