@@ -116,10 +116,11 @@ nav:
       - How to: Linux/how_to.md
       - SSH: Linux/ssh.md
       - fail2ban: Linux/fail2ban.md
-      - Strongswan: Linux/strongswan.md
+      - IPsec with failover: Linux/failover-vpn.md
       - Nmap: Linux/nmap.md
       - Swap: Linux/swap.md
       - Docker: Linux/docker.md
+      - Strongswan(deprecated): Linux/strongswan.md
   - Coding:
       - Python → Создание окружения: Coding/Python/create_environment.md
       - Git:
