@@ -3,7 +3,7 @@ title: Деплой IPsec с резервированием
 date: 2026-03-27
 ---
 
-#### Схема
+### Схема
 
 ```mermaid
 graph LR
@@ -28,7 +28,7 @@ graph LR
 
 **Failover:** при падении BGP-сессии маршрут переключается на статический (metric 250).
 
-#### Устанавливаем пакеты
+### Устанавливаем пакеты
 
 ```bash
 sudo apt update && sudo apt install -y \
@@ -40,7 +40,7 @@ sudo apt update && sudo apt install -y \
   tcpdump
 ```
 
-#### sysctl.conf
+### sysctl.conf
 
 ```bash
 cat <<EOF | sudo tee /etc/sysctl.d/99-ipsec.conf
@@ -52,7 +52,7 @@ EOF
 sudo sysctl --system
 ```
 
-#### Служба для поднятия интерфейсов
+### Служба для поднятия интерфейсов
 
 ```ini /etc/systemd/system/ipsec-xfrm-interfaces.service
 # /etc/systemd/system/ipsec-xfrm-interfaces.service
@@ -80,7 +80,7 @@ WantedBy=multi-user.target
 ```
 
 
-#### Создаём конфиг для strongswan
+### Создаём конфиг для strongswan
 ```conf /etc/swanctl/swanctl.conf
 # /etc/swanctl/swanctl.conf
 # Представлен вариант конфига с использованием общих для разных соединений настроек
@@ -166,7 +166,7 @@ secrets {
 
 ```
 
-#### Команды
+### Команды
 
 ```bash
 # Проверяем синтаксис
@@ -192,7 +192,7 @@ sudo swanctl --list-sas
 # Тунельные адреса должны начать пинговаться
 ```
 
-#### FRR
+### FRR
 
 ```bash
 # Включаем BGP
