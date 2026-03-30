@@ -29,7 +29,7 @@ Match Address 172.18.0.0/24,192.168.1.100
 sudo systemctl restart sshd
 ```
 
-## Решение для "WARNING: REMOTE HOST IDENTIFICATION HAS CHANGED!"
+## Ошибка REMOTE HOST IDENTIFICATION HAS CHANGED
 
 Эта ошибка возникает после переноса IP-адреса на новый инстанс, когда на клиенте в файле `~/.ssh/known_hosts` сохранен старый ключ хоста.
 
