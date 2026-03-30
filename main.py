@@ -70,25 +70,18 @@ def define_env(env):
                     "date": date,
                     "url": url,
                     "excerpt": excerpt,
-                    "path": get_breadcrumbs(rel_path, base_path),
+                    "path": get_breadcrumbs(rel_path)
                 }
             )
 
         posts.sort(key=lambda p: p["date"], reverse=True)
         return posts[: int(limit)]
 
-    def get_breadcrumbs(rel_path: Path, base_path: str) -> list:
-        """Генерирует список хлебных крошек на основе пути файла."""
-        breadcrumbs = []
-        current = []
-
-        # rel_path.parts[:-1] — берем все папки, исключая имя файла
-        for part in rel_path.parts[:-1]:
-            current.append(part)
-            title = part.replace("_", " ").title()
-
-            breadcrumbs.append({
-                "title": title,
-                "url": base_path + "/".join(current) + "/"
-            })
-        return breadcrumbs
+    def get_breadcrumbs(rel_path: Path) -> str:
+        """Возвращает путь в виде строки через слеш, например: Networks / Cisco"""
+        if len(rel_path.parts) <= 1:
+            return ""
+        
+        # Берем все папки, исключая сам файл, и делаем их с большой буквы
+        parts = [part.replace("_", " ").title() for part in rel_path.parts[:-1]]
+        return " / ".join(parts)
