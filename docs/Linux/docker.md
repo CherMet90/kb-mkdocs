@@ -15,7 +15,7 @@ sudo sh get-docker.sh
 ## Базовые практики
 
 ### Используйте Docker Compose
-Всегда используйте `docker compose` вместо одиночных `docker run` команд. Это обеспечивает:
+Всегда используйте `docker compose` вместо одиночных `docker run` команд. Это обеспечивает:  
 - Воспроизводимость конфигурации
 - Управление зависимостями между сервисами
 - Простоту развертывания на других серверах
@@ -25,7 +25,7 @@ sudo sh get-docker.sh
 ```bash
 sudo mkdir -p /opt/<project-name>
 ```
-
+<!-- more -->
 ### Ограничение размера логов
 Глобально ограничьте рост лог-файлов контейнеров. Создайте конфиг daemon:
 ```bash
@@ -42,12 +42,11 @@ sudo cat > /etc/docker/daemon.json <<EOF
 EOF
 sudo systemctl restart docker
 ```
-**Параметры:**
+**Параметры:**  
 - `max-size` — максимальный размер одного лог-файла (10 MB)
 - `max-file` — количество хранимых файлов (5 шт.)
 - `compress` — сжатие старых логов
 
-<!-- more -->
 
 ## Остановка и очистка Docker
 
@@ -78,32 +77,40 @@ For convenience, you can combine these commands into a single command sequence:
 docker stop $(docker ps -q) && docker rm $(docker ps -a -q) && docker system prune -a -f
 ```
 **Notes:**  
-* **Volumes**: If you want to also remove all unused volumes, you can use `docker system prune --volumes`, but remember this will also delete any data stored in those volumes permanently.  
+- **Volumes**: If you want to also remove all unused volumes, you can use `docker system prune --volumes`, but remember this will also delete any data stored in those volumes permanently.  
 
 
-## Копирование файлов из контейнера
+## Извлечение данных: работа с файлами
+Часто возникает необходимость извлечь файлы из Docker-окружения. Важно различать источник: **контейнер** (актуальное состояние исполнения) или **образ** (исходный шаблон).
 
-```
-docker cp <container_id>:<абсолютный_путь_до_файла_в_контейнере> <путь_КУДА_СОХРАНИТЬ_в_локальной_фс>
+### 1. Из контейнера (Recovery/Debugging)
+Используется, когда данные не были вынесены на хост через `volumes` или `bind mounts`.
+
+*   **Назначение**: Экстренное извлечение логов, дампов БД или конфигов, которые были изменены или созданы в процессе работы контейнера.
+*   **Trade-off**: **Антипаттерн.** Если вы используете этот метод для получения конфигов, которые вы правили внутри контейнера — значит, у вас не настроены `volumes`. В случае удаления контейнера все эти изменения будут потеряны.
+
+```bash
+docker cp <container_id>:<абсолютный_путь_в_контейнере> <путь_на_хосте>
 ```
 *Пример:*
-```
+```bash
 docker cp 2d22e790546b:/home/rundeck/server/config/log4j2.properties ./log4j.properties
 ```
-Файл `log4j.properties` будет сохранен из контейнера `2d22e790546b` в папку, откуда запущена команда  
 
+### 2. Из образа (Initialization/Template Extraction)
+Используется на этапе первичной настройки сервиса.
 
-## Копирование файлов из образа
+*   **Назначение**: Получение "дефолтных" файлов конфигурации (например, `nginx.conf`, `haproxy.cfg`) из образа. Вы достаете файл, чтобы изучить его структуру, изменить под свои нужды и затем подключить к контейнеру через `volumes`.
+*   **Trade-off**: Одноразовая процедура. После того как файл скопирован на хост, его нужно монтировать в контейнер через `volumes:`, иначе изменения не будут применены.
 
+```bash
+# Запускаем временный контейнер, монтируем текущую папку и копируем файл
+docker run --rm --entrypoint sh -v "$(pwd)":/dest <image_name> -c 'cp /path/to/file /dest'
 ```
-docker run --rm --entrypoint sh -v "<путь_до_локальной_папки>":/<имя_временной_папки> <имя_образа> -c 'cp <что_копируем> <имя_временной_папки>'
-```
-*Пример:*  
-```
+*Пример:*
+```bash
 docker run --rm --entrypoint sh -v "/docker/data/haproxy/":/dest haproxy -c 'cp /usr/local/etc/haproxy/haproxy.cfg /dest'
 ```
-*Что происходит:*  
-Запускается контейнер на основе указанного образа. Локальная папка `/docker/data/haproxy/` монтируется в созданный контейнер. Выполняется произвольная команда, в нашем случае `cp /usr/local/etc/haproxy/haproxy.cfg /dest`, контейнер останавливается и удаляется. В результате `/usr/local/etc/haproxy/haproxy.cfg` из контейнера будет скопирован в локальную папку `/docker/data/haproxy/`
 
 
 ## Настройка подсети в docker compose
