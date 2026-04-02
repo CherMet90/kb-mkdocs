@@ -17,7 +17,7 @@ CoPP — механизм защиты control plane от DoS-атак и изб
 - Ограничение SSH/TELNET доступа
 - Фильтрация ICMP
 - Защита routing protocols (BGP, OSPF)
-
+<!-- more -->
 ## Базовая архитектура
 
 ```mermaid
