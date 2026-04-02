@@ -1,6 +1,6 @@
 ---
 title: Control Plane Policing (CoPP) на Cisco IOS-XE
-date: 2025-XX-XX
+date: 2026-04-02
 ---
 
 # Control Plane Policing (CoPP)
