@@ -1,4 +1,56 @@
-##### Остановить все docker-контейнеры, удалить всю неиспользуемую инфу
+---
+title: Работа с Docker на Ubuntu
+date: 2026-04-02
+---
+
+# Работа с Docker на Ubuntu
+
+## Установка Docker
+Команда для установки через официальный скрипт:
+```bash
+curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+```
+
+## Базовые практики
+
+### Используйте Docker Compose
+Всегда используйте `docker compose` вместо одиночных `docker run` команд. Это обеспечивает:
+- Воспроизводимость конфигурации
+- Управление зависимостями между сервисами
+- Простоту развертывания на других серверах
+
+### Проекты размещайте в /opt
+Все docker-проекты разворачивайте в папке `/opt`:
+```bash
+sudo mkdir -p /opt/<project-name>
+```
+
+### Ограничение размера логов
+Глобально ограничьте рост лог-файлов контейнеров. Создайте конфиг daemon:
+```bash
+sudo cat > /etc/docker/daemon.json <<EOF
+{
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "5",
+    "compress": "true"
+  },
+  "log-level": "warn"
+}
+EOF
+sudo systemctl restart docker
+```
+**Параметры:**
+- `max-size` — максимальный размер одного лог-файла (10 MB)
+- `max-file` — количество хранимых файлов (5 шт.)
+- `compress` — сжатие старых логов
+
+<!-- more -->
+
+## Остановка и очистка Docker
+
 **Step 1: Stop All Running Containers**  
 First, stop all the currently running Docker containers:
 ```
@@ -29,7 +81,8 @@ docker stop $(docker ps -q) && docker rm $(docker ps -a -q) && docker system pru
 * **Volumes**: If you want to also remove all unused volumes, you can use `docker system prune --volumes`, but remember this will also delete any data stored in those volumes permanently.  
 
 
-##### Как скопировать файл из запущенного КОНТЕЙНЕРА в локальную фс
+## Копирование файлов из контейнера
+
 ```
 docker cp <container_id>:<абсолютный_путь_до_файла_в_контейнере> <путь_КУДА_СОХРАНИТЬ_в_локальной_фс>
 ```
@@ -40,7 +93,8 @@ docker cp 2d22e790546b:/home/rundeck/server/config/log4j2.properties ./log4j.pro
 Файл `log4j.properties` будет сохранен из контейнера `2d22e790546b` в папку, откуда запущена команда  
 
 
-##### Как скопировать файл из ОБРАЗА в локальную фс  
+## Копирование файлов из образа
+
 ```
 docker run --rm --entrypoint sh -v "<путь_до_локальной_папки>":/<имя_временной_папки> <имя_образа> -c 'cp <что_копируем> <имя_временной_папки>'
 ```
@@ -52,7 +106,8 @@ docker run --rm --entrypoint sh -v "/docker/data/haproxy/":/dest haproxy -c 'cp 
 Запускается контейнер на основе указанного образа. Локальная папка `/docker/data/haproxy/` монтируется в созданный контейнер. Выполняется произвольная команда, в нашем случае `cp /usr/local/etc/haproxy/haproxy.cfg /dest`, контейнер останавливается и удаляется. В результате `/usr/local/etc/haproxy/haproxy.cfg` из контейнера будет скопирован в локальную папку `/docker/data/haproxy/`
 
 
-##### Настройка подсети в docker compose
+## Настройка подсети в docker compose
+
 ```
 services:
   <service_name>:
