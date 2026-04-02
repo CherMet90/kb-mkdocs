@@ -1,2 +1,3 @@
 .reygpt-mask.yml
 __pycache__/
+.continue/
