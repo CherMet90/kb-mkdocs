@@ -1,6 +1,6 @@
 ---
 title: Mikrotik RouterOS
-date: 2026-01-16
+date: 2026-04-23
 ---
 
 # Mikrotik RouterOS
@@ -47,3 +47,12 @@ add src-address=Y.Y.Y.Y/32 dst-address=X.X.X.X/32 protocol=gre \
         remote.address=<тунельный_ip_соесда>/32 .as=<asn_соседа> \
         templates=default
     ```
+
+## VPN users
+
+Команды для быстрого получения списка PPP и WireGuard учёток:
+
+```
+/ppp secret print proplist=name,service,last-logged-out
+/interface wireguard peers print proplist=name,client-address,last-handshake
+```
