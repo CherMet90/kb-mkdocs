@@ -132,12 +132,11 @@ nav:
           - Переписывание авторства: Coding/Git/rewrite-author.md
           - Переключение веток: Coding/Git/branch-switching.md
       - Ansible → From Zero to Hero: Coding/Ansible/from_zero_to_hero.md
-    - Мониторинг:
+  - Мониторинг:
       - PRTG: Мониторинг/prtg.md
       - Zabbix: Мониторинг/zabbix.md
       - 'Docker TLS': Мониторинг/Создание TLS сертификатов для подключения к Docker.md
       - Netflow: Мониторинг/netflow.md
-
   - Виртуализация:
       - vCenter: Virtualization/vCenter.md
       - KVM в WSL2: Virtualization/kvm_wsl.md
