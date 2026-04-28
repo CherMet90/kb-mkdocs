@@ -18,8 +18,6 @@ date: 2026-04-24
 - что можно закрыть вручную
 
 
-
-
 ### Последние значения метрик
 `Monitoring → Latest data`
 
@@ -30,11 +28,9 @@ date: 2026-04-24
 - проверки, какие данные реально собираются
 - поиска точного имени item перед настройкой дашборда
 
-
-
 <!-- more -->
 ### Хосты и шаблоны
-`Configuration → Hosts`
+`Configuration → Hosts`  
 `Configuration → Templates`
 
 Здесь ищутся:
@@ -46,11 +42,9 @@ date: 2026-04-24
 - item'ы и графики конкретного устройства
 
 
-
-
 ### Автообнаружение
-`Configuration → Hosts → <host> → Discovery rules`
-или
+`Configuration → Hosts → <host> → Discovery rules`  
+или  
 `Configuration → Templates → <template> → Discovery rules`
 
 Здесь правятся:
@@ -59,8 +53,6 @@ date: 2026-04-24
 - trigger prototypes
 - item prototypes
 - macros, влияющие на сгенерированные сущности
-
-
 
 
 ### Уведомления и действия
@@ -73,8 +65,6 @@ date: 2026-04-24
 - не сломает ли новая группа чужую схему уведомлений
 
 
-
-
 ### Права доступа
 `Administration → User groups`
 
@@ -83,9 +73,6 @@ date: 2026-04-24
 - кто видит новые группы
 - кому доступны новые хосты
 - не нужно ли расширить права на новую ветку групп
-
-
-
 
 ---
 
