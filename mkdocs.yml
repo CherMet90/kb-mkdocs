@@ -97,6 +97,7 @@ nav:
   - Vendors:
       - Cisco: Networks/Vendors/cisco.md
       - 'Cisco → NX-OS → Multicast': Networks/Vendors/cisco/NX-OS/multicast.md
+      - 'Cisco → NX-OS → Hardening': Networks/Vendors/cisco/NX-OS/n3k_hardening.md
       - 'Cisco → IOS XE → Netflow': Networks/Vendors/cisco/IOS-XE/netflow.md
       - 'Cisco → IOS XE → OSPF': Networks/Vendors/cisco/IOS-XE/ospf.md
       - 'Cisco → IOS XE → IPsec': Networks/Vendors/cisco/IOS-XE/ipsec.md
