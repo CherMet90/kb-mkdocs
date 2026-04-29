@@ -1,6 +1,5 @@
 ---
 title: Харденинг Cisco NX-OS (N3K)
-description: Базовые меры по защите Management Plane на коммутаторах Cisco Nexus 3000 — логирование, VTY-ACL, SSH, CoPP, SNMP и изоляция NXAPI.
 date: 2025-04-29
 ---
 
