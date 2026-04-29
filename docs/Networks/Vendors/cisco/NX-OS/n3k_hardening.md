@@ -15,6 +15,7 @@ date: 2026-04-29
 logging level acllog 6
 logging server <SYSLOG_SERVER_IP> 6 use-vrf default facility local6
 ```
+
 - `acllog 6` (informational): включает логирование срабатываний `deny`-правил, которые явно содержат параметр `log`.
 - `facility local6`: рекомендуется для выделения Cisco-устройств в отдельный поток, что упрощает фильтрацию и ротацию на стороне Syslog-сервера.
 <!-- more -->
@@ -38,6 +39,7 @@ ip access-list ACL-VTY-ACCESS
 line vty
   access-class ACL-VTY-ACCESS in
 ```
+
 - Последовательность `900` гарантирует, что все несопоставленные соединения логируются перед сбросом.
 - `access-class ... in` применяется исключительно к входящим сессиям (SSH/Telnet).
 
@@ -47,6 +49,7 @@ line vty
 ssh login-gracetime 15
 ssh idle-timeout 10
 ```
+
 - `login-gracetime 15`: ограничение времени на ввод учетных данных
 - `idle-timeout 10`: принудительный разрыв соединения после 10 минут бездействия. Освобождает пул VTY для легитимных администраторов.
 
@@ -56,6 +59,7 @@ ssh idle-timeout 10
 ```cisco
 nxapi use-vrf management
 ```
+
 - **Trade-off:** После применения доступ к веб-интерфейсу и API будет возможен только через интерфейсы, привязанные к `management` VRF
 
 ## 5. ACL для SNMP
@@ -65,7 +69,8 @@ SNMP является частым вектором атак при слабой
 ip access-list 15
   permit udp 10.10.6.92/32 any eq snmp
 ```
-- Данный ACL создает правило доступа. Для его активации он должен быть явно привязан к конфигурации SNMP-сообщества (`snmp-server community ... use-ipv4acl 15`)
+
+Данный ACL создает правило доступа. Для его активации он должен быть явно привязан к конфигурации SNMP-сообщества (`snmp-server community ... use-ipv4acl 15`)
 
 ## 6. CoPP (Control Plane Policing) для защиты CPU
 Политики CoPP защищают процессор коммутатора от атак типа DoS и перебора паролей, ограничивая трафик, предназначенный контрольной плоскости.
