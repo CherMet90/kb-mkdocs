@@ -1,6 +1,6 @@
 ---
 title: Mikrotik RouterOS
-date: 2026-04-23
+date: 2026-05-04
 ---
 
 # Mikrotik RouterOS
@@ -55,4 +55,28 @@ add src-address=Y.Y.Y.Y/32 dst-address=X.X.X.X/32 protocol=gre \
 ```
 /ppp secret print proplist=name,service,last-logged-out
 /interface wireguard peers print proplist=name,client-address,last-handshake
+```
+
+## NAT / Connection Tracking
+
+Просмотр активных NAT-трансляций (маскарад, проброс портов):
+
+```
+# Все активные соединения
+/ip firewall connection print
+
+# Только srcnat (маскарад)
+/ip firewall connection print where src-nat
+
+# Только dstnat (проброс портов)
+/ip firewall connection print where dst-nat
+
+# Фильтр по подсети назначения
+/ip firewall connection print where dst-address in 10.156.0.0/16
+
+# Фильтр по подсети источника (кто ходит наружу)
+/ip firewall connection print where src-address in 10.156.0.0/16 && src-nat
+
+# Статистика срабатываний правил NAT
+/ip firewall nat print stats
 ```

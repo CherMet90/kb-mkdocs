@@ -23,8 +23,11 @@ CoPP (Control Plane Policing) — это механизм QoS-фильтраци
 
 CoPP строится по архитектуре MQC (Modular QoS CLI):
 
-```
-ACL (классификация трафика) → Class-Map (группировка) → Policy-Map (действия: transmit/drop/police) → Control-Plane (применение)
+```mermaid
+graph LR
+    ACL[ACL<br>классификация трафика] --> CM[Class-Map<br>группировка]
+    CM --> PM[Policy-Map<br>действия: permit/drop/police]
+    PM --> CP[Control-Plane<br>применение политики]
 ```
 
 **Задачи, которые решает CoPP:**
