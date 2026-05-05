@@ -102,6 +102,7 @@ nav:
       - 'Cisco → IOS XE → OSPF': Networks/Vendors/cisco/IOS-XE/ospf.md
       - 'Cisco → IOS XE → IPsec': Networks/Vendors/cisco/IOS-XE/ipsec.md
       - 'Cisco → IOS XE → Hardening (ASR1K)': Networks/Vendors/cisco/IOS-XE/asr1k_hardening.md
+      - 'Cisco → IOS XE → AAA': Networks/Vendors/cisco/IOS-XE/aaa.md
       - 'Cisco → IOS XE → Internet Failover (vrf-aware)': Networks/Vendors/cisco/IOS-XE/nat_vrf_pbr.md
       - Fortinet: Networks/Vendors/fortigate.md
       - Huawei:
