@@ -1,0 +1,94 @@
+hostname bn01
+
+
+
+
+no logging console
+
+
+
+
+
+
+
+
+
+
+ip cef
+mpls label protocol ldp
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+interface Loopback0
+ ip address 172.16.255.255 255.255.255.255
+ ip ospf 1 area 0
+
+interface GigabitEthernet0/0
+ media-type rj45
+ negotiation auto
+
+interface GigabitEthernet0/0.500
+ description -VF=Client=west-sw01=e0/2=EoMPLS=TEST---
+ bandwidth 10000
+ encapsulation dot1Q 500
+
+interface GigabitEthernet0/1
+ description -B=TRUNK=west-gw01=Gi0/3---
+ no switchport
+ ip address 172.16.64.6 255.255.255.254
+ ip ospf network point-to-point
+ ip ospf 1 area 1
+ negotiation auto
+ mpls ip
+
+interface GigabitEthernet0/2
+ description -B=TRUNK=bn02=Gi0/3---
+ no switchport
+ ip address 172.16.64.0 255.255.255.254
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+ negotiation auto
+ mpls ip
+
+interface GigabitEthernet0/3
+ description -B=TRUNK=bn03=Gi0/2---
+ no switchport
+ ip address 172.16.64.5 255.255.255.254
+ ip ospf network point-to-point
+ ip ospf 1 area 0
+ negotiation auto
+ mpls ip
+
+router ospf 1
+ auto-cost reference-bandwidth 10000
+ passive-interface default
+ no passive-interface GigabitEthernet0/1
+ no passive-interface GigabitEthernet0/2
+ no passive-interface GigabitEthernet0/3
+
+
+
+
+
+mpls ldp router-id Loopback0 force
+
+
+alias exec sid sh int des
+alias exec shr sh run
+alias exec shri sh run int
+alias exec ct conf t
