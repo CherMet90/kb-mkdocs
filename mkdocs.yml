@@ -124,6 +124,7 @@ nav:
       - SSH: Linux/ssh.md
       - fail2ban: Linux/fail2ban.md
       - IPsec with failover: Linux/failover-vpn.md
+      - GRE/IPsec tunnel mode: Linux/ipsec-gre-multicast.md
       - Nmap: Linux/nmap.md
       - Swap: Linux/swap.md
       - Docker: Linux/docker.md
