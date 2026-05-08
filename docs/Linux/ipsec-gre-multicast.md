@@ -1,6 +1,6 @@
 ---
 title: IPsec GRE поверх tunnel mode для мультикаста
-date: 2025-04-09
+date: 2026-05-05
 ---
 
 # IPsec GRE поверх tunnel mode для мультикаста
@@ -205,14 +205,14 @@ sudo systemctl restart strongswan
 ### 4. Изменения на Cisco ASR1002
 
 ```text
-interface Tunnel15825
+interface Tunnel100
  ip address 10.158.255.57 255.255.255.252
  ip mtu 1376
  ip pim sparse-mode
  tunnel source <PUB_IP_ONPREM>
  tunnel mode gre ip                 ! изменение: было ipsec ipv4
  tunnel destination <PUB_IP_CLOUD>
- tunnel vrf INTERNET_DN
+ tunnel vrf INTERNET
  tunnel protection ipsec profile PARTNER
 ```
 
@@ -225,7 +225,7 @@ show crypto ipsec profile PARTNER
 **После изменений:**
 
 ```text
-blr-asr1002# clear crypto sa
+onprem-asr# clear crypto sa
 ```
 
 ---
@@ -240,8 +240,8 @@ blr-asr1002# clear crypto sa
 | 4 | `show crypto session` | ASR | Active SA |
 | 5 | `ping 10.158.255.58` | ASR | Ответы |
 | 6 | `sudo ip igmp join <MCAST_GROUP>` на gre-corp (или старт приложения) | Linux | |
-| 7 | `show ip igmp groups Tunnel15825` | ASR | Группа отображается динамически |
-| 8 | `show ip mroute <MCAST_GROUP>` | ASR | `(*,G)` с OIF Tunnel15825 |
+| 7 | `show ip igmp groups Tunnel100` | ASR | Группа отображается динамически |
+| 8 | `show ip mroute <MCAST_GROUP>` | ASR | `(*,G)` с OIF Tunnel100 |
 
 **Тестирование IGMP join** можно выполнить с помощью `smcroute` или `mcjoin`:
 
