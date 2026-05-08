@@ -3,11 +3,11 @@ title: IPsec GRE поверх tunnel mode для мультикаста
 date: 2026-05-05
 ---
 
-# IPsec GRE поверх tunnel mode для мультикаста
+# GRE over IPsec tunnel mode
 
-## Ключевые особенности
+## Приём мультикаста на Linux в облачном инстансе
 
-### Почему не работают подходы
+### Почему не работают другие подходы
 
 | Подход | Причина несовместимости |
 |--------|-------------------------|
@@ -44,7 +44,7 @@ packet-beta
 | Транспорт | IPsec IKEv2, PSK, tunnel mode |
 | Мультикаст-группа | Например `239.1.1.1` |
 
-**Предусловие:** базовый деплой strongSwan выполнен по инструкции [failover-vpn.md](../failover-vpn.md) — разделы «Устанавливаем пакеты», «sysctl.conf», «Служба для поднятия интерфейсов». strongSwan запущен. Остальное (GRE, loopback, swanctl) настраивается по шагам ниже.
+**Предусловие:** базовый деплой strongSwan выполнен по инструкции [failover-vpn.md](../failover-vpn) — разделы «Устанавливаем пакеты», «sysctl.conf», «Служба для поднятия интерфейсов». strongSwan запущен. Остальное (GRE, loopback, swanctl) настраивается по шагам ниже.
 
 ---
 
@@ -75,8 +75,7 @@ sudo ip tunnel add gre-corp mode gre \
 sudo ip link set gre-corp mtu 1376 up
 
 # Назначить туннельные адреса
-sudo ip addr add 10.158.255.58/30 dev gre-corp
-sudo ip addr add 10.158.25.2/24 dev gre-corp
+sudo ip addr add <TUNNEL_IP_CLOUD>/30 dev gre-corp
 
 # Sysctl для корректной работы мультикаста
 sudo sysctl -w net.ipv4.conf.all.rp_filter=0
@@ -111,8 +110,7 @@ ExecStart=/bin/sh -c '\
   ip tunnel show gre-corp >/dev/null 2>&1 || \
     (ip tunnel add gre-corp mode gre local <PUB_IP_CLOUD> remote <PUB_IP_ONPREM> ttl 64 && \
      ip link set gre-corp mtu 1376 up && \
-     ip addr add 10.158.255.58/30 dev gre-corp && \
-     ip addr add 10.158.25.2/24 dev gre-corp); \
+     ip addr add <TUNNEL_IP_CLOUD>/30 dev gre-corp); \
   sysctl -w net.ipv4.conf.all.rp_filter=0; \
   sysctl -w net.ipv4.conf.gre-corp.rp_filter=0; \
   sysctl -w net.ipv4.conf.lo.rp_filter=0; \
@@ -206,7 +204,7 @@ sudo systemctl restart strongswan
 
 ```text
 interface Tunnel100
- ip address 10.158.255.57 255.255.255.252
+ ip address <TUNNEL_IP_ONPREM> 255.255.255.252
  ip mtu 1376
  ip pim sparse-mode
  tunnel source <PUB_IP_ONPREM>
@@ -235,10 +233,10 @@ onprem-asr# clear crypto sa
 | # | Команда | На узле | Ожидаемый результат |
 |---|---------|---------|---------------------|
 | 1 | `sudo swanctl --list-sas` | Linux | IKE_SA ESTABLISHED, CHILD_SA INSTALLED (tunnel mode) |
-| 2 | `ping 10.158.255.57 -I gre-corp` | Linux | Ответы |
+| 2 | `ping <TUNNEL_IP_ONPREM> -I gre-corp` | Linux | Ответы |
 | 3 | `sudo tcpdump -i eth0 -n host <PUB_IP_ONPREM>` | Linux | Видны ESP-пакеты |
 | 4 | `show crypto session` | ASR | Active SA |
-| 5 | `ping 10.158.255.58` | ASR | Ответы |
+| 5 | `ping <TUNNEL_IP_CLOUD>` | ASR | Ответы |
 | 6 | `sudo ip igmp join <MCAST_GROUP>` на gre-corp (или старт приложения) | Linux | |
 | 7 | `show ip igmp groups Tunnel100` | ASR | Группа отображается динамически |
 | 8 | `show ip mroute <MCAST_GROUP>` | ASR | `(*,G)` с OIF Tunnel100 |
