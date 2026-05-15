@@ -262,7 +262,7 @@ mcjoin -i gre-corp <MCAST_GROUP>
 
 ### Источники
 
-- **Route‑based VPN (GRE + tunnel mode)** — [strongSwan Docs](https://docs.strongswan.org/docs/latest/features/routeBasedVpn.html)
+- **Route‑based VPN** — [strongSwan Docs](https://docs.strongswan.org/docs/latest/features/routeBasedVpn.html)
 - **GRE + NAT → TS_UNACCEPT** — [GitHub Discussion #1915](https://github.com/strongswan/strongswan/discussions/1915)
 - **Transport mode + NAT (IKEv2 TS_UNACCEPT)** — [strongSwan Mailing List](https://lists.strongswan.org/pipermail/dev/2013-December/000852.html)
 - **GRE Tunnel на IOS‑XE** — [Cisco IOS XE Tunneling](https://www.cisco.com/c/en/us/td/docs/routers/ios/config/17-x/ip-multicast/b-ip-multicast/m_imc_tunnel.html)
