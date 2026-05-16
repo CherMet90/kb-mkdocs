@@ -3,9 +3,9 @@ title: HTTPS к любому Docker-сервису
 date: 2026-05-15
 ---
 
-# HTTPS для Docker-сервиса без домена и Let's Encrypt
+# HTTPS к Docker-сервису
 
-## Теоретическая часть
+## Теория
 
 Когда сервис в Docker Compose слушает только HTTP, а наружу нужно отдавать HTTPS, проще всего поставить перед ним **reverse proxy** в отдельном контейнере. Он берёт на себя TLS-терминацию, а сам сервис продолжает работать по HTTP внутри Docker-сети.
 
@@ -27,7 +27,7 @@ graph LR
     end
 ```
 <!-- more -->
-## Практическая часть
+## Практика
 
 ### Кейс: добавление HTTPS к NetBox в Docker Compose
 
@@ -43,7 +43,7 @@ graph LR
    ```bash
    cd /db/netbox-docker
    sudo mkdir -p certs nginx
-   sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+   sudo openssl req -x509 -nodes -days 36500 -newkey rsa:2048 \
      -keyout certs/privkey.pem \
      -out certs/fullchain.pem \
      -subj "/CN=netbox.local"
