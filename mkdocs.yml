@@ -111,6 +111,7 @@ nav:
           - SNMP: Networks/Vendors/huawei/snmp.md
       - Mikrotik:
           - RouterOS: Networks/Vendors/mikrotik/ros.md
+          - 'RouterOS → Print': Networks/Vendors/mikrotik/print-filters.md
       - pfSense: Networks/Vendors/pfSense.md
   - Windows:
       - File Server: Windows/file_server.md
