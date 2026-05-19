@@ -71,6 +71,7 @@ add src-address=Y.Y.Y.Y/32 dst-address=X.X.X.X/32 protocol=gre \
 ### Настройка перенаправления трафика по доменным именам
 
 **Исходные данные (обезличены):**
+
 - Локальный контроллер домена: `10.0.0.10`
 - SSTP‑туннель: интерфейс `sstp-out1`, удалённый шлюз `10.255.255.1`
 - Целевые домены: `example-geo.com`, `another-blocked.org`
@@ -145,3 +146,132 @@ add chain=dstnat protocol=udp dst-port=53 layer7-protocol=dns-update \
 **Источники:**
 - [MikroTik Wiki: Layer7](https://help.mikrotik.com/docs/display/ROS/Layer7)
 - [RFC 2136 – Dynamic Updates in the Domain Name System](https://datatracker.ietf.org/doc/html/rfc2136)
+
+---
+
+## WireGuard (гостевой доступ с белым списком)
+
+Каждый экземпляр WireGuard на роутере слушает **свой UDP‑порт** и изолирован от других интерфейсов.  
+Для гостей/подрядчиков заводят выделенный интерфейс, чтобы:
+
+- не смешивать их трафик с сотрудниками и облачным доступом,
+- управлять белым списком через отдельную цепочку firewall,
+- при необходимости быстро отключить всю гостевую подсеть одним правилом.
+
+Каждому гостю выделяется **персональный IP с маской /32** — запрещает подмену source‑IP внутри туннеля.  
+Разрешённые ресурсы описываются **адрес‑листами**, что упрощает добавление новых гостей (один peer + правило под новый source‑IP без дублирования dst‑адресов).
+
+### Настройка гостевого WireGuard‑сервера (RDP-доступ подрядчику)
+
+**Исходные данные (обезличены):**
+
+- Публичный IP роутера: `198.51.100.1`
+- Гостевая WireGuard-подсеть: `10.255.250.0/24`
+- Выбранный порт: `13232` (должен отличаться от портов других WireGuard-интерфейсов)
+- Целевой RDP-сервер: `192.168.100.5`
+- DNS-сервер для гостей: `192.168.100.1`
+- WAN-интерфейс: `ether1`
+
+#### Шаг 1 – Создание интерфейса и назначение IP
+
+```bash
+/interface wireguard
+add name=wg-guests listen-port=13232 comment="Guest WG server"
+
+/ip address
+add address=10.255.250.1/24 interface=wg-guests comment="Guest WG subnet"
+```
+
+**Важно:** каждая пара ключей (private/public) генерируется автоматически. Посмотреть публичный ключ сервера — `:put [/interface wireguard get wg-guests public-key]`.
+
+#### Шаг 2 – Открытие порта в chain=input
+
+```bash
+/ip firewall filter
+add action=accept chain=input dst-port=13232 protocol=udp comment="Allow WireGuard guests" place-before=1
+```
+
+**Важно:** правило должно оказаться выше всех `drop`-правил в цепочке `input`.
+
+#### Шаг 3 – Address‑листы для разрешённых ресурсов
+
+```bash
+/ip firewall address-list
+add address=192.168.100.5 list=guest-rdp-servers comment="RDP Terminal Server"
+add address=192.168.100.1 list=guest-dns comment="DNS server"
+```
+
+#### Шаг 4 – Цепочка guest-fwd и разрешающие правила
+
+```bash
+/ip firewall filter
+# Прыжок из forward для всей гостевой подсети
+add chain=forward src-address=10.255.250.0/24 action=jump jump-target=guest-fwd comment="Jump guest traffic"
+```
+
+**Примечание:** цепочка `guest-fwd` создастся автоматически при добавлении этого правила. Отдельно объявлять её (`/ip firewall filter add chain=guest-fwd`) не требуется.
+
+```bash
+/ip firewall filter
+# Каждый гость — свой комплект разрешений (src-address уникален)
+add chain=guest-fwd src-address=10.255.250.11 dst-address-list=guest-rdp-servers protocol=tcp dst-port=3389 action=accept comment="Allow RDP for guest #1"
+add chain=guest-fwd src-address=10.255.250.11 dst-address-list=guest-dns protocol=udp dst-port=53 action=accept comment="Allow DNS UDP for guest #1"
+add chain=guest-fwd src-address=10.255.250.11 dst-address-list=guest-dns protocol=tcp dst-port=53 action=accept comment="Allow DNS TCP for guest #1"
+
+# В конце цепочки — запрет всего остального
+add chain=guest-fwd action=drop comment="Drop all other guest traffic"
+```
+
+**Важно:** на каждого следующего гостя добавляется новый peer (см. шаг 5) и аналогичные три правила с его уникальным `src-address`.
+
+#### Шаг 5 – Добавление гостя (peer)
+
+```bash
+/interface wireguard peers
+add interface=wg-guests \
+    public-key="<ПУБЛИЧНЫЙ_КЛЮЧ_КЛИЕНТА>" \
+    allowed-address=10.255.250.11/32 \
+    comment="Гость Иванов, RDP-доступ"
+```
+
+**Важно:** `allowed-address=.../32` жёстко привязывает этого пира к одному IP. Без этого гость может заявить любой адрес из подсети.
+
+#### Шаг 6 – Запрет доступа гостей к самому роутеру
+
+```bash
+/ip firewall filter
+add action=drop chain=input src-address=10.255.250.0/24 comment="Guests must not access router"
+```
+
+**Ограничение:** если гостям нужен DNS‑сервер самого роутера (`10.255.250.1`), разместите разрешающее правило для UDP/53 к `10.255.250.1` выше этого drop.
+
+#### Шаг 7 – (Опционально) NAT для выхода гостей в интернет
+
+```bash
+/ip firewall nat
+add chain=srcnat src-address=10.255.250.0/24 out-interface=ether1 action=masquerade comment="NAT for guests"
+```
+
+Если интернет гостям не нужен — правило не добавляйте.
+
+#### Пример клиентского конфига (выдаётся гостю)
+
+```ini
+[Interface]
+PrivateKey = <ПРИВАТНЫЙ_КЛЮЧ_КЛИЕНТА>
+Address = 10.255.250.11/32
+DNS = 192.168.100.1
+
+[Peer]
+PublicKey = <ПУБЛИЧНЫЙ_КЛЮЧ_ВАШЕГО_СЕРВЕРА>
+Endpoint = 198.51.100.1:13232
+AllowedIPs = 10.255.250.0/24, 192.168.100.5/32, 192.168.100.1/32
+PersistentKeepalive = 25
+```
+
+**Примечание:** `AllowedIPs` на клиенте перечисляет только те подсети/IP, которые вы фактически разрешили в цепочке `guest-fwd`. Клиент не сможет маршрутизировать ничего другого через туннель.
+
+**Источники:**
+- [MikroTik Wiki: WireGuard](https://help.mikrotik.com/docs/display/ROS/WireGuard)
+- [MikroTik Wiki: Firewall Filter](https://help.mikrotik.com/docs/display/ROS/Filter)
+- [MikroTik Wiki: Address Lists](https://help.mikrotik.com/docs/display/ROS/Address-lists)
