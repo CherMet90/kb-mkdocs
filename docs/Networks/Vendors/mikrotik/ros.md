@@ -272,6 +272,7 @@ PersistentKeepalive = 25
 **Примечание:** `AllowedIPs` на клиенте перечисляет только те подсети/IP, которые вы фактически разрешили в цепочке `guest-fwd`. Клиент не сможет маршрутизировать ничего другого через туннель.
 
 **Источники:**
+
 - [MikroTik Wiki: WireGuard](https://help.mikrotik.com/docs/display/ROS/WireGuard)
 - [MikroTik Wiki: Firewall Filter](https://help.mikrotik.com/docs/display/ROS/Filter)
 - [MikroTik Wiki: Address Lists](https://help.mikrotik.com/docs/display/ROS/Address-lists)

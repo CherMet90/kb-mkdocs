@@ -92,6 +92,7 @@ nav:
               - IPsec: Networks/VPN/ipsec.md
               - ISAKMP Example: Networks/VPN/isakmp_example.md
               - OpenConnect: Networks/VPN/ocserv.md
+              - 3x-ui: Networks/VPN/3x-ui.md
 
       - L4 → TCP: Networks/L4/tcp.md
   - Vendors:

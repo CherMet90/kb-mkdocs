@@ -106,6 +106,44 @@ track 2 ip sla 2 reachability
  delay down 30 up 60
 ```
 
+### Рекомендуемые тайминги: агрессивный уход, консервативный возврат
+
+Для production-сценариев, где важна быстрая реакция на отказ и защита от флаппинга при восстановлении:
+
+```bash
+ip sla 1
+ tag ISP1-global-1.1.1.1-ping
+ icmp-echo 1.1.1.1 source-interface <интерфейс_ISP1>
+ frequency 5            # проба каждые 5 секунд (быстрый детект падения)
+ timeout 1000
+ip sla schedule 1 life forever start-time now
+
+track 1 ip sla 1 reachability
+ delay down 10 up 120   # ↓ ~16 сек до переключения, ↑ ~2 мин до возврата
+
+ip sla 2
+ tag ISP2-VRF-1.1.1.1-ping
+ icmp-echo 1.1.1.1 source-interface <интерфейс_ISP2>
+ vrf ISP2_INTERNET
+ frequency 5
+ timeout 1000
+ip sla schedule 2 life forever start-time now
+
+track 2 ip sla 2 reachability
+ delay down 10 up 120
+```
+
+| Событие | Худшее время | Как считается |
+|---|---|---|
+| Обнаружение отказа (➡ резерв) | **~16 с** | frequency (5 с) + timeout (1 с) + delay down (10 с) |
+| Возврат на основной (⬅) | **~125 с (≈2 мин)** | до frequency (5 с) + delay up (120 с) |
+
+**Почему так:**
+
+- `frequency 5` — компромисс между скоростью детекта и нагрузкой CPU (ICMP лёгкий).
+- `delay down 10` — отсеивает мимолётные потери (2 пробы подряд), но гарантирует переключение за ~16 с реального down.
+- `delay up 120` — линк должен быть стабилен 2 минуты перед возвратом; эффективно гасит флаппинг.
+
 **4. NAT Overload (PAT)**
 
 ```bash
