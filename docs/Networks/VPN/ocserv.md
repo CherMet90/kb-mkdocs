@@ -68,6 +68,13 @@ dns = 10.250.53.10
 dns = 10.250.53.11
 split-dns = corp.example
 split-dns = vpn.example.internal
+
+# Только эти сети видны через VPN
+route = 10.250.53.0/24
+route = 10.250.100.0/24
+
+# Запретить клиенту ходить куда-либо ещё через туннель
+restrict-user-to-routes = true
 ```
 
 Что здесь важно:

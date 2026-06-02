@@ -45,8 +45,7 @@ flowchart LR
 - Случайным портом (не дефолтный `2053`)
 - Случайным URL‑путём (не `/`)
 - SSL‑сертификатом (самоподписанный или Let's Encrypt)
-- Rate‑limit на порт панели (iptables)
-
+- Rate‑limit
 ---
 
 ### Установка через Docker Compose
@@ -96,7 +95,7 @@ openssl req -x509 -nodes -days 3650 -newkey rsa:2048 \
 
 ### Смена порта и URL‑пути панели (security hardening)
 
-В панели: **Settings → Panel Settings → General → Certificates**:
+В панели: **Settings → Panel Settings**:
 
 | Параметр | До | После (пример) |
 |----------|----|-------|
