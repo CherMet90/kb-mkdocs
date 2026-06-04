@@ -25,7 +25,7 @@ sudo cscli decisions list
 sudo ipset list crowdsec-blacklists-0
 sudo ipset list crowdsec-blacklists-1
 ```
-
+<!-- more -->
 ### 3. Снятие бана по IP
 
 ```bash
