@@ -93,6 +93,7 @@ nav:
               - ISAKMP Example: Networks/VPN/isakmp_example.md
               - OpenConnect: Networks/VPN/ocserv.md
               - 3x-ui: Networks/VPN/3x-ui.md
+              - MTProto: Networks/VPN/mtproto.md
 
       - L4 → TCP: Networks/L4/tcp.md
   - Vendors:
@@ -125,6 +126,8 @@ nav:
       - How to: Linux/how_to.md
       - SSH: Linux/ssh.md
       - fail2ban: Linux/fail2ban.md
+      - SOCKS5 через SSH: Linux/ssh-socks.md
+      - CrowdSec: Linux/crowdsec.md
       - IPsec with failover: Linux/failover-vpn.md
       - GRE/IPsec tunnel mode: Linux/ipsec-gre-multicast.md
       - Nmap: Linux/nmap.md

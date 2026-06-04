@@ -1,5 +1,5 @@
 ---
-title: Работа с Docker на Ubuntu
+title: Работа с Docker
 date: 2026-06-02
 ---
 
