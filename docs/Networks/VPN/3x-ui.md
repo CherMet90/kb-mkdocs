@@ -1,6 +1,6 @@
 ---
 title: 3x‑ui — панель управления Xray
-date: 2026-05-27
+date: 2026-06-09
 ---
 
 # 3x‑ui — панель управления Xray
@@ -113,25 +113,102 @@ docker compose down && docker compose up -d
 
 ---
 
-### Базовый inbound — VLESS + Reality
+### XHTTP — транспортый протокол нового поколения
+
+XHTTP — экспериментальный транспорт Xray, работающий поверх HTTP с возможностью имитации потокового видео (MP4‑чанки). В отличие от WebSocket или gRPC, xHTTP отправляет данные чанками с настраиваемым паддингом, что делает трафик визуально неотличимым от обычного HTTP‑потока. Режим **`stream-one`** открывает одно долгоживущее соединение для всего сеанса, снижая число повторных рукопожатий и уменьшая задержки.
+
+---
+
+### Базовый inbound — VLESS + Reality + xhttp
 
 В панели: **Inbounds → Add Inbound**.
 
-Основные поля:
+#### Основные поля (вкладка General)
 
 | Параметр | Значение |
 |----------|----------|
 | Protocol | `vless` |
 | Port | `443` |
-| Reality | `true` |
-| Dest | `www.microsoft.com:443` (пример fallback‑хоста) |
-| Flow | `xtls-rprx-vision` |
-| Transport | `tcp` |
-| Security | `reality` |
 
-Сгенерировать ключи (кнопка **Reality → Generate**). Скопировать полученные `publicKey`, `privateKey`, `shortId`.
+#### Настройки sniffing (вкладка Sniffing)
 
-В **Clients** добавить пользователя — имя (email), UUID. Панель сгенерирует ссылку для импорта в клиент (v2rayN, Streisand, Hiddify и т.п.).
+| Параметр | Значение |
+|----------|----------|
+| Sniffing | `true` |
+| Dest Override | `http, tls, quic` |
+
+#### Transport = xhttp (вкладка Stream → Transport)
+
+| Параметр | Значение |
+|----------|----------|
+| Network | `xhttp` |
+| Path | `/assets` |
+| Host | *(оставить пустым)* |
+| Mode | `stream-one` |
+
+#### Security = reality (вкладка Stream → Security)
+
+Нажать **Reality → Generate** для генерации ключей.
+
+| Параметр | Значение |
+|----------|----------|
+| Target | `www.domain.tv:443` |
+| Server Names | `www.domain.tv, storage.domain.net` |
+| Private Key | *(сгенерированный)* |
+| Public Key | *(сгенерированный)* |
+| Short IDs | *(сгенерированный)* |
+| Fingerprint | `chrome` |
+| SpiderX | `/` |
+
+**Примечание:** `Flow` для xhttp не используется — оставить пустым.
+
+#### Добавление клиента (вкладка Clients)
+
+| Параметр | Значение |
+|----------|----------|
+| Email | `test0` (можно задать любой) |
+| UUID | *(сгенерировать кнопкой Generate)* |
+| Limit IP | `0` (без лимита) |
+| Total GB | `0` (без лимита) |
+| Expiry Time | `0` (без срока) |
+
+Панель автоматически сгенерирует ссылку для импорта. Клиенты: v2rayN, Streisand, Hiddify, Sing-box и др.
+
+---
+
+### Fallback — несколько сервисов на одном порту
+
+Xray позволяет одному inbound принимать трафик и, в зависимости от SNI или URL‑пути, направлять его в разные downstream‑обработчики на loopback. Это избавляет от необходимости открывать дополнительные порты наружу.
+
+```mermaid
+flowchart LR
+    Client -->|TLS/Reality| Main[VLESS + Reality + xHTTP :443]
+    Main -->|"path: /assets"| XHTTP[Обработчик xHTTP]
+    Main -->|"path: /ws"| WS[WS inbound\n127.0.0.1:10001]
+    Main -->|без условий| Web[Веб-сервер\n127.0.0.1:8080]
+```
+
+**Настройка в панели (кратко):**
+
+1. Создать дочерние inbound на `127.0.0.1` с `security: none` и `Proxy Protocol: true`
+2. В основном inbound → **Advanced** → добавить в `settings` блок `fallbacks`:
+
+```json
+{
+  "fallbacks": [
+    {
+      "path": "/ws",
+      "dest": "127.0.0.1:10001",
+      "xver": 1
+    },
+    {
+      "dest": "127.0.0.1:8080"
+    }
+  ]
+}
+```
+
+**Ограничение:** дочерние inbound **не поддерживают** xHTTP и gRPC — только TCP, WebSocket, HTTPUpgrade.
 
 ---
 
@@ -214,6 +291,104 @@ iptables -A DOCKER-USER -i eth0 -d pub‑ip‑in -p tcp --syn --dport 28473 -j D
 ```
 
 Правила вставляются **перед** завершающим `-A DOCKER-USER -j RETURN`.
+
+---
+
+### Обновление панели и Xray в Docker Compose
+
+**Контекст:** панель запущена через Docker Compose. Данные (база, бинарник Xray, конфиги) хранятся в директории `/etc/x-ui` внутри контейнера. Способ её хранения на хосте может быть разным:
+
+- **Именованный том** (рекомендуется для production) — например, `xui-data` в примере ниже.
+- **Bind‑mount** (проще для экспериментов) — например, `./db` в разделе «Установка через Docker Compose».
+
+Ниже — обе ситуации.
+
+#### Определяем, какой тип используется
+
+```bash
+# Показать все тома и bind‑mounts контейнера 3x-ui
+docker inspect 3x-ui --format '{{ json .Mounts }}' | jq '.[] | {Type, Source, Destination}'
+```
+
+Вывод для именованного тома:
+```
+{"Type":"volume","Source":"/var/lib/docker/volumes/xui-data/_data","Destination":"/etc/x-ui"}
+```
+
+Для bind‑mount:
+```
+{"Type":"bind","Source":"/opt/3x-ui/db","Destination":"/etc/x-ui"}
+```
+
+#### Резервное копирование перед обновлением
+
+**Если используется именованный том (`xui-data` или аналогичный):**
+
+```bash
+# Резервная копия именованного тома
+docker run --rm \
+  -v xui-data:/data \
+  -v /opt/3x-ui:/backup \
+  alpine tar czf /backup/xui-data-backup-$(date +%Y%m%d).tar.gz -C /data .
+```
+
+**Если используется bind‑mount (`./db`):**
+
+```bash
+cp -r /opt/3x-ui/db /opt/3x-ui/db.backup-$(date +%Y%m%d)
+```
+
+Сертификаты (`./certs`) — отдельный bind‑mount в обоих случаях. При необходимости скопировать отдельно:
+
+```bash
+cp -r /opt/3x-ui/certs /opt/3x-ui/certs.backup-$(date +%Y%m%d)
+```
+
+**Важно:** в томе/директории лежит база данных панели и бинарник Xray. Без резервной копии при повреждении данных или неудачном обновлении восстановить конфигурацию будет невозможно.
+
+#### Обновление панели (3x‑ui)
+
+Не зависит от типа тома. Обновляется только сам образ контейнера.
+
+```bash
+cd /opt/3x-ui
+
+# Скачать актуальный образ
+docker compose pull 3x-ui
+
+# Пересоздать контейнер (без -v, чтобы не удалить том!)
+docker compose down && docker compose up -d
+```
+
+**Важно:** не использовать кнопку обновления в веб‑интерфейсе панели. Она предназначена для bare‑metal установки и при следующем `docker compose up` результат будет потерян — контейнер пересоздастся из старого образа. Единственный штатный способ обновления панели в Docker — `docker compose pull`.
+
+#### Обновление Xray‑core
+
+Бинарник Xray лежит внутри тома/директории (`/etc/x-ui/bin/xray`), поэтому обновление через кнопку в панели сохраняется между пересозданиями контейнера. Допустимо обновлять Xray из веб‑интерфейса: **Settings → Xray Core → Check for Updates → Update**.
+
+```bash
+# После обновления Xray панель перезапустит его автоматически.
+# Дополнительных действий с контейнером не требуется.
+```
+
+**Важно:** перед обновлением проверить статус релиза на [странице Xray‑core](https://github.com/XTLS/Xray-core/releases). Версии с пометкой «Pre‑release» в production‑среде использовать не рекомендуется. Если текущая версия стабильна и нет критических багов — дождаться стабильного релиза.
+
+#### Проверки после обновления
+
+```bash
+# Контейнер в статусе Up
+docker ps --filter name=3x-ui
+
+# Панель отвечает (подставить свой порт и путь)
+curl -sS -o /dev/null -w "%{http_code}" https://<pub-ip-in>:28473/<путь>/
+
+# Логи на отсутствие ошибок
+docker logs --tail 50 3x-ui
+```
+
+- Подключиться клиентом к inbound и проверить, что трафик ходит.
+- С исходящего IP (если настроен SNAT) зайти на `ifconfig.me` — убедиться, что отображается `pub‑ip‑out`.
+- Убедиться, что iptables‑правила (SNAT, rate‑limit) на месте — `docker compose down && up` их не затрагивает.
 
 ---
 
