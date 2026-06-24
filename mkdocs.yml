@@ -136,7 +136,8 @@ nav:
       - Docker HTTPS: Linux/docker-https.md
       - Strongswan(deprecated): Linux/strongswan.md
   - Утилиты:
-      - Nmap: Утилиты/nmap.md
+      - nmap: Утилиты/nmap.md
+      - tcpdump: Утилиты/tcpdump.md
   - Coding:
       - Python → Создание окружения: Coding/Python/create_environment.md
       - Git:
