@@ -1,0 +1,49 @@
+en
+conf t
+	no logging con
+	alias exec sid                   sh int des
+	alias exec shr                   sh run
+	alias exec shri                  sh run int
+	alias exec ct                    conf t
+	host
+
+en
+ct
+int lo0
+	ip add 172.16.255.251 255.255.255.255
+	ip ospf 1 ar 0
+int gi0/3
+	desc -B=Uplink=bn02=Gi0/1---
+	no sw
+	ip add 172.16.64.9 255.255.255.254
+	ip ospf 1 ar 0
+	ip ospf net point-to-p
+	negotiation auto
+	mpls ip
+	no shut
+router ospf 1
+	passive-interface def
+	no passive-interface gi0/3
+	auto-cost ref 10000
+	redistribute connected
+	exit
+
+Для роутера:
+ct
+	ip cef
+	mpls ip
+	mpls label prot ldp
+	mpls ldp router-id lo0 force
+end
+wr
+
+Для свитча:
+ct
+int vlan 1
+	desc -M-
+	ip add 172.16.1.2 255.255.255.0
+	no shut
+	exit
+ip default-gateway 172.16.1.1
+ip route 0.0.0.0 0.0.0.0 172.16.1.1
+wr
