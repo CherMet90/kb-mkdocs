@@ -1,3 +1,10 @@
 .reygpt-mask.yml
 __pycache__/
 .continue/
+
+# MkDocs build output (деплоится отдельно в ветку gh-pages)
+site/
+
+# Python virtual environment
+venv/
+.agents/

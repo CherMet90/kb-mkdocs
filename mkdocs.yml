@@ -156,3 +156,6 @@ nav:
   - Виртуализация:
       - vCenter: Virtualization/vCenter.md
       - KVM в WSL2: Virtualization/kvm_wsl.md
+  - Security:
+      - WAF:
+          - Course: Security/WAF/Course/index.md

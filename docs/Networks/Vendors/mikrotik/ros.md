@@ -1,6 +1,6 @@
 ---
 title: Mikrotik RouterOS
-date: 2026-05-19
+date: 2026-09-28
 ---
 
 # Mikrotik RouterOS
@@ -276,3 +276,116 @@ PersistentKeepalive = 25
 - [MikroTik Wiki: WireGuard](https://help.mikrotik.com/docs/display/ROS/WireGuard)
 - [MikroTik Wiki: Firewall Filter](https://help.mikrotik.com/docs/display/ROS/Filter)
 - [MikroTik Wiki: Address Lists](https://help.mikrotik.com/docs/display/ROS/Address-lists)
+
+---
+
+## Обновление точек доступа через CAPsMAN (legacy wireless)
+
+CAPsMAN (контроллер `/caps-man`, пакет `wireless`) обновляет CAP'ы, раздавая им `.npk` из своего файлового хранилища. Имя запрашиваемого файла формируется как `<package>-<version>-<architecture>.npk`, где:
+
+- `version` — версия, установленная на менеджере (`/system package update get installed-version`);
+- `architecture` — архитектура **точки**, а не менеджера.
+
+Пакеты лежат в каталоге из параметра `package-path`. Если `package-path` пуст, менеджер раздаёт только «встроенные» пакеты — те, что остались в `/file` после собственного апгрейда, и только для CAP'ов **той же архитектуры**. После штатного апгрейда через *Check for updates* RouterOS не оставляет `.npk` в `/file`, поэтому раздавать нечего — в логе появляется:
+
+```
+caps,error [...] upgrade status: failed, failed to download file 'wireless-7.24.2-arm.npk', no such file
+```
+
+CAPsMAN **не скачивает** пакеты с `download.mikrotik.com` сам — их нужно положить в `package-path` вручную или скриптом.
+
+```mermaid
+sequenceDiagram
+  participant M as CAPsMAN (менеджер)
+  participant C as CAP (точка)
+  C->>M: подключение (DTLS)
+  M-->>C: список пакетов <pkg>-<ver>-<arch>.npk
+  C->>M: запрос файла
+  alt файла нет в package-path
+    M--xC: failed to download file, no such file
+  else файл есть
+    M->>C: .npk
+    C->>C: install + reboot
+    C->>M: переподключение, version совпала
+  end
+```
+
+### Пример
+
+**Исходные данные:**
+
+- Менеджер: `7.24.2`, `package-path` пуст, `upgrade-policy=none`
+- Точки: 4 × cAP ac (`RBcAPGi-5acD2nD`), architecture `arm`, версия `7.15.2`
+- Каталог для пакетов: `upgrade`
+
+#### Шаг 1 – Проверки (только чтение)
+
+```bash
+/system/resource/print                       # architecture-name менеджера, free-hdd-space (нужно ~14 МБ)
+/file/print                                  # есть ли каталог flash
+/caps-man/manager/print                      # package-path, upgrade-policy
+/caps-man/remote-cap/print detail            # board, version, identity точек
+```
+
+**Примечание:** architecture видна из имени файла в ошибке (здесь `arm`). Для CAP на `arm` нужны два пакета — `routeros` и `wireless`.
+
+#### Шаг 2 – Каталог и загрузка пакетов для архитектуры точек
+
+```bash
+/file/add name=upgrade type=directory
+
+# version = installed-version менеджера; arch = архитектура точек
+/tool fetch url="https://download.mikrotik.com/routeros/7.24.2/routeros-7.24.2-arm.npk"  dst-path="upgrade/routeros-7.24.2-arm.npk"
+/tool fetch url="https://download.mikrotik.com/routeros/7.24.2/wireless-7.24.2-arm.npk" dst-path="upgrade/wireless-7.24.2-arm.npk"
+
+/file/print detail where name~"upgrade"      # type=package, package-version=7.24.2, package-architecture=arm
+```
+
+**Важно:** `/tool fetch` сам каталог не создаёт — сначала `/file/add`, потом загрузка.
+
+**Важно:** если в `/file` есть каталог `flash`, кладите пакеты в `flash/upgrade` и ставьте `package-path=/flash/upgrade` — иначе после перезагрузки менеджера файлы уедут вместе с RAM-диском и ошибка вернётся.
+
+#### Шаг 3 – Указать каталог менеджеру
+
+```bash
+/caps-man/manager/set package-path=/upgrade
+# upgrade-policy оставляем none во время раскатки
+```
+
+**Важно:** `version` в имени файла должна совпадать с `installed-version` менеджера. При следующем обновлении менеджера пакеты нужно переложить на новую версию — иначе повторится «no such file».
+
+#### Шаг 4 – Обновление точек по одной
+
+```bash
+/caps-man/remote-cap/upgrade [find where identity="corp-ap01"]
+/log/print where topics~"caps" follow
+/caps-man/remote-cap/print detail            # version -> 7.24.2
+```
+
+Далее по очереди:
+
+```bash
+/caps-man/remote-cap/upgrade [find where identity="corp-ap02"]
+/caps-man/remote-cap/upgrade [find where identity="corp-ap03"]
+/caps-man/remote-cap/upgrade [find where identity="corp-ap04"]
+# либо разом, когда допустим кратковременный простой всех точек:
+/caps-man/remote-cap/upgrade [find where version!="7.24.2"]
+```
+
+**Важно:** держите `upgrade-policy=none`, пока не обновите все точки. При `suggest-same-version`/`require-same-version` менеджер сам начинает обновлять CAP'ы при переподключении — возможен одновременный ребут всех точек; `require-same-version` дополнительно отключает провижининг точек с несовпадающей версией. Включайте политику уже после того, как все CAP'ы на нужной версии.
+
+**Примечание:** точке не нужен интернет — пакеты идут по CAPsMAN-сессии и применяются при перезагрузке точки.
+
+**Ограничение:** RouterBOOT (прошивка платы) через CAPsMAN не раздаётся — обновляется отдельно на каждой точке (`/system/routerboard print` → `upgrade`).
+
+### Автоматическое подтягивание пакетов (опционально)
+
+Чтобы при каждом обновлении менеджера пакеты для CAP'ов подтягивались сами, используют скрипт `capsman-download-packages.capsman` из routeros-scripts: он берёт версию из `/system package update get installed-version`, скачивает `routeros`+`wireless` для нужных архитектур в `package-path`, удаляет устаревшие `.npk` и запускает `/caps-man/remote-cap/upgrade [find where version!=…]`. Ставится на scheduler `start-time=startup`.
+
+**Источники:**
+
+- [MikroTik Manual: CAPsMAN (legacy)](https://manual.mikrotik.com/docs/wireless/abgn/capsman/)
+- [MikroTik Manual: /caps-man/manager (CLI reference)](https://manual.mikrotik.com/docs/cli-reference/caps-man/manager/)
+- [MikroTik Manual: Files](https://help.mikrotik.com/docs/spaces/ROS/pages/2555971/Files)
+- [MikroTik: пакеты RouterOS](https://download.mikrotik.com/routeros/)
+- [routeros-scripts: capsman-download-packages](https://github.com/eworm-de/routeros-scripts/blob/main/doc/capsman-download-packages.md)
