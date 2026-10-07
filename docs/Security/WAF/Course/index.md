@@ -1,6 +1,5 @@
 ---
 title: "WAF for Network Engineers: From Zero to Hero"
-date: 2026-09-26
 ---
 
 # WAF for Network Engineers: From Zero to Hero

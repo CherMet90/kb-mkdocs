@@ -1,6 +1,5 @@
 ---
 title: "Guideline оформления курса WAF"
-date: 2026-09-26
 ---
 
 # Guideline оформления курса WAF
