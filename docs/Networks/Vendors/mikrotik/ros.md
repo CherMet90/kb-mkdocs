@@ -1,6 +1,6 @@
 ---
 title: Mikrotik RouterOS
-date: 2026-09-28
+date: 2026-10-07
 ---
 
 # Mikrotik RouterOS
@@ -276,6 +276,88 @@ PersistentKeepalive = 25
 - [MikroTik Wiki: WireGuard](https://help.mikrotik.com/docs/display/ROS/WireGuard)
 - [MikroTik Wiki: Firewall Filter](https://help.mikrotik.com/docs/display/ROS/Filter)
 - [MikroTik Wiki: Address Lists](https://help.mikrotik.com/docs/display/ROS/Address-lists)
+
+---
+
+## WireGuard (hub-spoke архитектура: роутер в роли spoke)
+
+Роутер в роли **spoke (инициатор)**: держит приватный ключ и сам устанавливает туннель к удаленному **hub** по заранее известным публичному ключу и endpoint. Публичный ключ роутера при этом должен быть зарегистрирован на hub.
+
+```mermaid
+flowchart LR
+  LAN["Офисная LAN 10.0.10.0/24"] --> R["RouterOS<br/>wg-spoke 10.60.0.21/32<br/>NAT masquerade"]
+  R -- "UDP → 198.51.100.9:51820<br/>keepalive 25s" --> HUB["hub<br/>10.60.0.1"]
+  HUB --> CL["Удалённая сеть 10.70.0.0/24"]
+```
+
+### Настройка spoke (spoke → hub)
+
+#### Шаг 1 – Создание WireGuard‑интерфейса
+
+```bash
+/interface wireguard
+add name=wg-spoke listen-port=51830 private-key="<ПРИВАТНЫЙ_КЛЮЧ_SPOKE>" \
+    comment="S2S client to hub"
+```
+
+**Важно:** `listen-port` должен отличаться от портов остальных WireGuard‑интерфейсов роутера.  
+**Важно:** при заданном `private-key` публичный ключ выводится из него — сверьте и передайте на hub: `:put [/interface wireguard get wg-spoke public-key]`.
+
+#### Шаг 2 – Назначение IP на интерфейс
+
+```bash
+/ip address
+add address=10.60.0.21/32 interface=wg-spoke comment="WG transit"
+```
+
+#### Шаг 3 – Добавление пира (hub)
+
+```bash
+/interface wireguard peers
+add interface=wg-spoke \
+    public-key="<ПУБЛИЧНЫЙ_КЛЮЧ_HUB>" \
+    endpoint-address=198.51.100.9 endpoint-port=51820 \
+    allowed-address=10.60.0.0/24,10.70.0.0/24 \
+    persistent-keepalive=25s \
+    comment="hub"
+```
+
+**Важно:** `allowed-address` — это крипто‑фильтр WireGuard (какие адреса принимаем от пира и куда ему направляем трафик), а **не** записи в таблице маршрутизации — см. шаг 4.  
+**Важно:** `persistent-keepalive=25s` обязателен, если spoke за NAT — он поддерживает маппинг в stateful‑firewall/NAT.
+
+#### Шаг 4 – Маршруты через WG‑интерфейс
+
+```bash
+/ip route
+add dst-address=10.60.0.0/24 gateway=wg-spoke comment="Hub transit net"
+add dst-address=10.70.0.0/24 gateway=wg-spoke comment="Remote net"
+```
+
+**Важно:** в отличие от `wg-quick` (который сам выводит маршруты из `AllowedIPs`), RouterOS маршруты из `allowed-address` **не создаёт** — их добавляют вручную.
+
+#### Шаг 5 – NAT (masquerade) для офисной LAN
+
+```bash
+/ip firewall nat
+add chain=srcnat src-address=10.0.10.0/24 out-interface=wg-spoke action=masquerade \
+    comment="Office LAN -> via wg-spoke"
+```
+
+**Примечание:** при NAT hub видит трафик офиса как адрес spoke (`10.60.0.21`) и не нуждается в обратных маршрутах к офисной подсети. Если hub знает маршрут до офисной сети (без NAT) — правило не добавляйте.  
+**Ограничение:** возвратный трафик из облака подпадает под существующие `accept established,related`; отдельное правило `chain=input` нужно только если hub обращается к самому роутеру (`10.60.0.21`).
+
+**Проверка:**
+
+```bash
+/interface wireguard peers print detail where interface=wg-spoke   # last-handshake, rx/tx
+/ping 10.60.0.1
+```
+
+**Источники:**
+
+- [MikroTik Manual: WireGuard (интерфейс)](https://manual.mikrotik.com/docs/cli-reference/interface/wireguard/)
+- [MikroTik Manual: WireGuard peers](https://manual.mikrotik.com/docs/cli-reference/interface/wireguard/peers/)
+- [MikroTik Wiki: WireGuard](https://help.mikrotik.com/docs/display/ROS/WireGuard)
 
 ---
 
