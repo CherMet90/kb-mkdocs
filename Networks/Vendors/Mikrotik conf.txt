@@ -1,0 +1,60 @@
+/system reset-configuration no-defaults=yes skip-backup=yes
+
+/interface bridge
+add name=lo0
+add name=local
+
+/interface vlan
+add interface=ether1 name=pppoe vlan-id=106
+/interface pppoe-client
+add disabled=no interface=pppoe name=pppoe-out1 use-peer-dns=yes user=CUSTOMER
+
+/routing ospf instance
+add name=ospf-instance-1 redistribute=connected,static
+/routing ospf area
+add instance=ospf-instance-1 name=area0
+add area-id=0.0.0.1 instance=ospf-instance-1 name=area1 type=stub
+
+/ip pool
+add name=pool0 ranges=192.168.64.1-192.168.64.49
+/ip dhcp-server
+add address-pool=pool0 disabled=no interface=local lease-time=1d name=dhcp1
+
+/interface bridge port
+add bridge=local interface=ether2
+add bridge=local interface=ether3
+add bridge=local interface=ether4
+add bridge=local interface=ether5
+
+/ip address
+add address=8.8.8.8 interface=lo0 network=8.8.8.8
+add address=10.0.64.8/24 interface=ether1 network=10.0.64.0
+add address=192.168.64.62/26 interface=local network=192.168.64.0
+
+/ip dhcp-server network
+add address=192.168.64.0/26 dns-server=10.10.5.2 gateway=192.168.64.62
+
+/ip firewall nat
+add action=masquerade chain=srcnat out-interface=ether1
+add action=dst-nat chain=dstnat dst-port=3389 in-interface=ether1 protocol=tcp to-addresses=192.168.64.49 to-ports=3389
+add action=dst-nat chain=dstnat dst-port=37008 in-interface=ether1 protocol=udp to-addresses=192.168.64.49 to-ports=37008
+
+/ip firewall filter
+add action=drop chain=input connection-state=invalid
+add action=accept chain=input connection-state=established,related,untracked
+add action=drop chain=input in-interface=ether1
+add action=drop chain=forward connection-state=invalid
+add action=accept chain=forward connection-state=established,related,untracked
+add action=drop chain=forward connection-nat-state=!dstnat in-interface=ether1
+
+/routing ospf area range
+add area=area1 prefix=172.1.10.0/23
+/routing ospf interface-template
+add area=area0 interfaces=ether1
+add area=area1 interfaces=vlan15
+
+/system clock
+set time-zone-name=Europe/Minsk
+
+/system identity
+set name=CherMet_R-TEST
