@@ -63,7 +63,7 @@ sudo sysctl --system
 [Unit]
 Description=Create IPsec XFRM interfaces
 After=network-online.target
-Before=strongswan.service frr.service
+Before=strongswan.service
 Wants=network-online.target
 
 [Service]
