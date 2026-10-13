@@ -125,6 +125,7 @@ nav:
   - Linux:
       - Begin: Linux/begin.md
       - How to: Linux/how_to.md
+      - FS: Linux/fs.md
       - SSH: Linux/ssh.md
       - fail2ban: Linux/fail2ban.md
       - SOCKS5 через SSH: Linux/ssh-socks.md
@@ -156,6 +157,7 @@ nav:
   - Виртуализация:
       - vCenter: Virtualization/vCenter.md
       - KVM в WSL2: Virtualization/kvm_wsl.md
+      - Cloud: Virtualization/cloud.md
   - Security:
       - WAF:
           - Course: Security/WAF/Course/index.md
