@@ -1,6 +1,6 @@
 ---
 title: IPsec GRE поверх tunnel mode для мультикаста
-date: 2026-05-05
+date: 2026-10-14
 ---
 
 # GRE over IPsec tunnel mode
@@ -44,7 +44,7 @@ packet-beta
 | Транспорт | IPsec IKEv2, PSK, tunnel mode |
 | Мультикаст-группа | Например `239.1.1.1` |
 
-**Предусловие:** базовый деплой strongSwan выполнен по инструкции [failover-vpn.md](../failover-vpn) — разделы «Устанавливаем пакеты», «sysctl.conf», «Служба для поднятия интерфейсов». strongSwan запущен. Остальное (GRE, loopback, swanctl) настраивается по шагам ниже.
+**Предусловие:** базовый деплой strongSwan выполнен по инструкции [failover-vpn.md](failover-vpn.md) — разделы «Устанавливаем пакеты», «sysctl.conf», «Служба для поднятия интерфейсов». strongSwan запущен. Остальное (GRE, loopback, swanctl) настраивается по шагам ниже.
 
 ---
 
@@ -78,6 +78,7 @@ sudo ip link set gre-corp mtu 1376 up
 sudo ip addr add <TUNNEL_IP_CLOUD>/30 dev gre-corp
 
 # Sysctl для корректной работы мультикаста
+sudo sysctl -w net.ipv4.ip_forward=1
 sudo sysctl -w net.ipv4.conf.all.rp_filter=0
 sudo sysctl -w net.ipv4.conf.lo.rp_filter=0
 sudo sysctl -w net.ipv4.conf.gre-corp.rp_filter=0
@@ -89,9 +90,13 @@ sudo ip route add <REMOTE_SUBNET>/<MASK> dev gre-corp
 
 **Важно:** `rp_filter=0` отключает strict reverse path filtering на интерфейсе — исходящие IGMP-пакеты и мультикаст-трафик не отбрасываются. `force_igmp_version=2` — для совместимости со старыми IGMP-реализациями.
 
+**Важно:** команды выше — для отладки. Созданные вручную интерфейс, маршруты и `sysctl -w` перезагрузку не переживают; постоянная конфигурация — systemd-юнит из п. 2.5.
+
+**Важно:** для транзита трафика через инстанс нужен `net.ipv4.ip_forward=1` — он задан в командах выше (и в systemd-юните п. 2.5). Без него пакеты видны на `gre-corp` в `tcpdump`, но ответов нет: ядро их не пересылает. Постоянная настройка через `/etc/sysctl.d` — в базовом деплое ([failover-vpn.md](failover-vpn.md), раздел «sysctl.conf»). Проверка — `sysctl net.ipv4.ip_forward`.
+
 ---
 
-### 2.5. Systemd-юнит для автоматизации (не проверен)
+### 2.5. Systemd-юнит для автоматизации
 
 Создайте unit-файл `/etc/systemd/system/ipsec-gre-interfaces.service`:
 
@@ -111,12 +116,15 @@ ExecStart=/bin/sh -c '\
     (ip tunnel add gre-corp mode gre local <PUB_IP_CLOUD> remote <PUB_IP_ONPREM> ttl 64 && \
      ip link set gre-corp mtu 1376 up && \
      ip addr add <TUNNEL_IP_CLOUD>/30 dev gre-corp); \
+  ip route replace <REMOTE_SUBNET>/<MASK> dev gre-corp; \
+  sysctl -w net.ipv4.ip_forward=1; \
   sysctl -w net.ipv4.conf.all.rp_filter=0; \
   sysctl -w net.ipv4.conf.gre-corp.rp_filter=0; \
   sysctl -w net.ipv4.conf.lo.rp_filter=0; \
   sysctl -w net.ipv4.conf.gre-corp.force_igmp_version=2'
 
 ExecStop=/bin/sh -c '\
+  ip route del <REMOTE_SUBNET>/<MASK> dev gre-corp 2>/dev/null; \
   ip tunnel del gre-corp 2>/dev/null; \
   ip addr del <PUB_IP_CLOUD>/32 dev lo label lo:pub 2>/dev/null'
 
@@ -131,6 +139,8 @@ sudo systemctl daemon-reload
 sudo systemctl enable ipsec-gre-interfaces.service
 sudo systemctl start ipsec-gre-interfaces.service
 ```
+
+**Примечание:** `sysctl -w` внутри юнита — единственно верное место: ключи `conf.gre-corp.*` существуют только после создания интерфейса, поэтому в `/etc/sysctl.d` их писать нельзя (на момент применения файла интерфейса ещё нет, `sysctl --system` вернёт ошибку).
 
 ---
 
@@ -187,6 +197,10 @@ secrets {
 }
 ```
 
+**Важно:** `local.id` должен совпадать с тем, что Cisco проверяет в `match identity remote address` (обычно публичный IP инстанса), а `id` в `secrets` — с ID удалённой стороны (`<PUB_IP_ONPREM>`). Иначе PSK не найдётся, а IKE_SA не поднимется.
+
+**Примечание:** если соединение инициирует Cisco, `remote_addrs` можно не задавать, а `start_action` выставить в `none` — тогда Linux работает только как responder. `proposals` / `esp_proposals` можно опустить: дефолтные предложения strongSwan покрывают типовые Cisco-профили (проверено на `aes-cbc-256` + `sha256` + `group 14` для IKE и `esp-aes 256 esp-sha-hmac` + `pfs group14` для ESP).
+
 #### Применить конфигурацию
 
 ```bash
@@ -240,6 +254,11 @@ onprem-asr# clear crypto sa
 | 6 | `sudo ip igmp join <MCAST_GROUP>` на gre-corp (или старт приложения) | Linux | |
 | 7 | `show ip igmp groups Tunnel100` | ASR | Группа отображается динамически |
 | 8 | `show ip mroute <MCAST_GROUP>` | ASR | `(*,G)` с OIF Tunnel100 |
+| 9 | `grep esp4 /proc/modules` | Linux | Модуль ESP загружен |
+| 10 | `sysctl net.ipv4.ip_forward` | Linux | `= 1` |
+| 11 | `sudo tcpdump -i gre-corp -n icmp` | Linux | Виден трафик из туннеля |
+
+**Важно:** если `swanctl --list-sas` показывает `IKE_SA ESTABLISHED`, но CHILD_SA не поднимается, а в логе `netlink error: Requested type not found (93)` — на узле заблокирован модуль `esp4` митигацией LPE. Разбор и снятие — в [failover-vpn.md](failover-vpn.md), раздел «Устанавливаем пакеты».
 
 **Тестирование IGMP join** можно выполнить с помощью `smcroute` или `mcjoin`:
 
@@ -267,4 +286,4 @@ mcjoin -i gre-corp <MCAST_GROUP>
 - **Transport mode + NAT (IKEv2 TS_UNACCEPT)** — [strongSwan Mailing List](https://lists.strongswan.org/pipermail/dev/2013-December/000852.html)
 - **GRE Tunnel на IOS‑XE** — [Cisco IOS XE Tunneling](https://www.cisco.com/c/en/us/td/docs/routers/ios/config/17-x/ip-multicast/b-ip-multicast/m_imc_tunnel.html)
 - **man ip-tunnel** — [man7.org](https://man7.org/linux/man-pages/man8/ip-tunnel.8.html)
-- **Базовая настройка IPsec с резервированием** — [failover-vpn.md](../failover-vpn.md)
+- **Базовая настройка IPsec с резервированием** — [failover-vpn.md](failover-vpn.md)

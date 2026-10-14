@@ -1,6 +1,6 @@
 ---
 title: Деплой IPsec на Ubuntu с резервированием
-date: 2026-03-27
+date: 2026-10-14
 ---
 
 # Деплой IPsec на Ubuntu с резервированием
@@ -34,13 +34,55 @@ graph LR
 
 ```bash
 sudo apt update && sudo apt install -y \
-  strongswan \
+  charon-systemd \
   strongswan-swanctl \
+  strongswan-libcharon \
+  libstrongswan-standard-plugins \
   frr \
   frr-pythontools \
   iproute2 \
   tcpdump
 ```
+
+**Важно:** метапакет `strongswan` намеренно не ставим. В Ubuntu 24.04 он зависит от legacy-бэкенда (`strongswan-charon` + `strongswan-starter`, конфиг `/etc/ipsec.conf`) и **не** создаёт systemd-юнит `strongswan.service` — `systemctl enable strongswan` падает с «Unit strongswan.service not found». Юнит и демон `charon-systemd` даёт одноимённый пакет, а `/etc/swanctl/` и утилиту `swanctl` — `strongswan-swanctl`.
+
+Проверка, что legacy не приехал:
+
+```bash
+apt list --installed 2>/dev/null | grep -E "charon|strongswan"
+# Ожидаем: charon-systemd, libstrongswan, libstrongswan-standard-plugins,
+# strongswan-libcharon, strongswan-swanctl
+# Не должно быть: strongswan-charon, strongswan-starter
+```
+
+Если legacy на хосте уже стоял (например, до переустановки) — он должен быть выключен: два `charon` подерутся за UDP/500, 4500 и XFRM.
+
+```bash
+sudo systemctl disable --now strongswan-starter
+sudo apt purge --auto-remove strongswan strongswan-charon strongswan-starter
+```
+
+**Важно:** если в системе есть митигация LPE, запрещающая загрузку `esp4` (`/etc/modprobe.d/blacklist-lpe.conf` — её создаёт, в частности, тулинг Yandex Cloud), то IKE_SA поднимется, а CHILD_SA — нет:
+
+```text
+[KNL] received netlink error: Requested type not found (93)
+[IKE] unable to install inbound and outbound IPsec SA (SAD) in kernel
+[IKE] failed to establish CHILD_SA, keeping IKE_SA
+```
+
+Со стороны Cisco это выглядит как пустая ошибка `IKEv2-ERROR` без деталей — в ответ уходит `NO_PROPOSAL_CHOSEN`.
+
+```bash
+# Что перекрывает загрузку модулей. В норме вывод пустой
+modprobe -c | grep -E "^install (esp4|esp6)"
+lsmod | grep -E "esp4|esp6"
+# Фикс CVE-2026-43284 / CVE-2026-43500 есть в 24.04 LTS начиная с 6.8.0-124
+uname -r
+sudo mv /etc/modprobe.d/blacklist-lpe.conf /etc/modprobe.d/blacklist-lpe.conf.disabled
+sudo modprobe esp4 esp6
+```
+
+**Ограничение:** снимать митигацию безопасно только если ядро не ниже исправленной версии. Иначе сначала обновить ядро.
 
 ## sysctl.conf
 
@@ -80,6 +122,8 @@ ExecStop=/bin/sh -c '\
 [Install]
 WantedBy=multi-user.target
 ```
+
+**Важно:** не возвращать в `Before=` токен `frr.service`. У FRR есть `Before=network.target`, а юнит упорядочен после `network-online.target` → ordering-цикл (`frr → network.target → network-online.target → юнит → frr`), и systemd молча удаляет задание `frr.service/start` при загрузке: FRR не стартует, в `journalctl -b` — `Found ordering cycle`. `systemd-analyze verify` циклы **не** проверяет.
 
 
 ## Создаём конфиг для strongswan
@@ -234,3 +278,10 @@ bfd
 end
 wr
 ```
+
+## Источники
+
+- **strongSwan — charon-systemd** (имя юнита `strongswan`) — [docs.strongswan.org](https://docs.strongswan.org/docs/latest/daemons/charon-systemd.html)
+- **strongSwan — Installation**: в Debian/Ubuntu вместо метапакета ставятся `charon-systemd` + `strongswan-swanctl` — [docs.strongswan.org](https://docs.strongswan.org/docs/latest/install/install.html)
+- **CVE-2026-43284** (xfrm-ESP, «Dirty Frag») — [ubuntu.com/security](https://ubuntu.com/security/CVE-2026-43284)
+- **CVE-2026-43500** (RxRPC, «Dirty Frag») — [ubuntu.com/security](https://ubuntu.com/security/CVE-2026-43500)
