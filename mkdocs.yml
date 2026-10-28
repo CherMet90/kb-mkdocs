@@ -140,6 +140,7 @@ nav:
       - nmap: Утилиты/nmap.md
       - tcpdump: Утилиты/tcpdump.md
       - nginx: Утилиты/nginx.md
+      - iperf: Утилиты/iperf.md
   - Coding:
       - Python → Создание окружения: Coding/Python/create_environment.md
       - Git:
